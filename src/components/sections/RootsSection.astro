@@ -1,0 +1,25 @@
+---
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import { aboutContent } from '@data/services';
+---
+
+<section class="bg-brand-navy-50 py-16 sm:py-20 lg:py-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <div data-aos="fade-right">
+        <SectionTitle
+          eyebrow="Nuestras raíces"
+          title="Más de 25 años moviendo al mundo"
+          description={aboutContent.roots}
+        />
+      </div>
+      <div class="space-y-6" data-aos="fade-left">
+        <p class="text-base leading-relaxed text-gray-600">{aboutContent.team}</p>
+        <p class="text-base leading-relaxed text-gray-600">{aboutContent.consulting}</p>
+        <blockquote class="border-l-4 border-brand-red pl-6 italic text-brand-navy">
+          {aboutContent.philosophy}
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import HeroSection from '@components/sections/HeroSection.astro';
+import IntroSection from '@components/sections/IntroSection.astro';
+import RootsSection from '@components/sections/RootsSection.astro';
+import AboutSection from '@components/sections/AboutSection.astro';
+import StatsSection from '@components/sections/StatsSection.astro';
+import VisionMissionSection from '@components/sections/VisionMissionSection.astro';
+import ValuesSection from '@components/sections/ValuesSection.astro';
+import ServicesSection from '@components/sections/ServicesSection.astro';
+import FleetSection from '@components/sections/FleetSection.astro';
+import CtaSection from '@components/sections/CtaSection.astro';
+import ContactSection from '@components/sections/ContactSection.astro';
+import { SITE_TAGLINE, SITE_DESCRIPTION } from '@data/site';
+---
+
+<BaseLayout
+  title={`${SITE_TAGLINE} — Comercio Exterior y Logística`}
+  description={SITE_DESCRIPTION}
+  image="/images/og-default.jpg"
+>
+  <HeroSection />
+  <IntroSection />
+  <RootsSection />
+  <AboutSection />
+  <StatsSection />
+  <VisionMissionSection />
+  <ValuesSection />
+  <ServicesSection />
+  <FleetSection />
+  <CtaSection />
+  <ContactSection />
+</BaseLayout>

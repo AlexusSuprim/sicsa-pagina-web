@@ -1,0 +1,48 @@
+---
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import { Icon } from 'astro-icon/components';
+import { aboutContent } from '@data/services';
+---
+
+<section id="nosotros" class="py-16 sm:py-20 lg:py-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+      <div data-aos="fade-right">
+        <SectionTitle
+          eyebrow="¿Quiénes somos?"
+          title="Nuestra identidad"
+          description={aboutContent.identity}
+        />
+        <p class="mt-6 text-base leading-relaxed text-gray-600">{aboutContent.heritage}</p>
+      </div>
+      <div
+        class="rounded-2xl bg-brand-navy p-8 text-white sm:p-10"
+        data-aos="fade-left"
+      >
+        <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-brand-red/20">
+          <Icon name="mdi:dna" class="h-7 w-7 text-brand-red" aria-hidden="true" />
+        </div>
+        <h3 class="font-display text-2xl font-bold text-white">Nuestra herencia logística</h3>
+        <p class="mt-4 leading-relaxed text-white/80">
+          Orgullosamente familiares. Lo que comenzó como un legado familiar hoy es una empresa
+          impulsada por tres generaciones que no han dejado de innovar en comercio exterior y
+          logística integral.
+        </p>
+        <ul class="mt-6 space-y-3">
+          <li class="flex items-center gap-3 text-sm text-white/80">
+            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
+            Fundada en abril de 1999
+          </li>
+          <li class="flex items-center gap-3 text-sm text-white/80">
+            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
+            Socios netamente guatemaltecos
+          </li>
+          <li class="flex items-center gap-3 text-sm text-white/80">
+            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
+            Seguridad jurídica y operativa
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

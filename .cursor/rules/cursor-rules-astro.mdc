@@ -1,0 +1,496 @@
+---
+description: Reglas para sitios web institucionales con Astro 4+, Tailwind CSS y TypeScript. Aplica a todos los archivos .astro, .ts y .css del proyecto.
+globs: ["src/**/*.astro", "src/**/*.ts", "src/**/*.css", "public/contact.php"]
+alwaysApply: false
+---
+
+# Astro Rules — Sitio Institucional
+
+## Stack
+
+- **Generador:** Astro 4+ con `output: 'static'`
+- **Lenguaje:** TypeScript strict
+- **Estilos:** Tailwind CSS v3+ (mobile-first, utility-first)
+- **Íconos:** astro-icon + Iconify
+- **Animaciones:** AOS (Animate On Scroll) + CSS nativo
+- **Formulario:** PHP nativo en Namecheap
+- **Deploy:** Carpeta `/dist` subida por FTP a `public_html/`
+
+---
+
+## Estructura de Archivos — Obligatoria
+
+```
+src/
+├── components/
+│   ├── layout/         # Header.astro, Footer.astro, Nav.astro, MobileMenu.astro
+│   ├── sections/       # Hero.astro, About.astro, Services.astro, Contact.astro, CTA.astro
+│   └── ui/             # Button.astro, Card.astro, SectionTitle.astro, Badge.astro
+├── layouts/
+│   └── BaseLayout.astro
+├── pages/
+│   ├── index.astro
+│   └── [slug].astro
+├── data/               # Datos estáticos en TypeScript
+│   ├── services.ts
+│   └── team.ts
+└── styles/
+    └── globals.css
+```
+
+### Naming conventions
+
+- Archivos Astro: `PascalCase` → `HeroSection.astro`, `ServiceCard.astro`
+- Archivos TypeScript: `kebab-case` → `services.ts`, `nav-links.ts`
+- Variables y funciones: `camelCase`
+- Constantes: `UPPER_SNAKE_CASE`
+- Interfaces: `PascalCase` → `ServiceItem`, `TeamMember`
+
+---
+
+## Componente Astro — Estructura Base
+
+```astro
+---
+// src/components/sections/Services.astro
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import ServiceCard from '@components/ui/ServiceCard.astro';
+import { services } from '@data/services';
+---
+
+<section id="servicios" class="py-20 bg-gray-50">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <SectionTitle
+      eyebrow="Lo que hacemos"
+      title="Nuestros Servicios"
+      description="Descripción breve de la propuesta de valor."
+    />
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map(service => (
+        <ServiceCard service={service} />
+      ))}
+    </div>
+  </div>
+</section>
+```
+
+### Props con TypeScript — siempre tipadas
+
+```astro
+---
+// src/components/ui/ServiceCard.astro
+interface Props {
+  service: {
+    icon: string;
+    title: string;
+    description: string;
+    href?: string;
+  };
+}
+const { service } = Astro.props;
+---
+
+<div class="group rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
+  <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50">
+    <!-- ícono aquí -->
+  </div>
+  <h3 class="text-lg font-semibold text-gray-900">{service.title}</h3>
+  <p class="mt-2 text-sm leading-relaxed text-gray-500">{service.description}</p>
+  {service.href && (
+    <a
+      href={service.href}
+      class="mt-4 inline-flex items-center text-sm font-medium text-brand-600 hover:text-brand-700"
+    >
+      Ver más →
+    </a>
+  )}
+</div>
+```
+
+---
+
+## Datos Estáticos — Patrón en TypeScript
+
+```typescript
+// src/data/services.ts
+export interface ServiceItem {
+  id: string;
+  icon: string;          // nombre del ícono de Iconify
+  title: string;
+  description: string;
+  href?: string;
+}
+
+export const services: ServiceItem[] = [
+  {
+    id: 'consultoria',
+    icon: 'lucide:briefcase',
+    title: 'Consultoría',
+    description: 'Asesoría especializada para optimizar tus procesos.',
+  },
+  {
+    id: 'desarrollo',
+    icon: 'lucide:code-2',
+    title: 'Desarrollo',
+    description: 'Soluciones tecnológicas a medida para tu empresa.',
+  },
+];
+```
+
+---
+
+## Tailwind CSS — Reglas de Uso
+
+### Mobile-first siempre
+
+```astro
+<!-- ✅ Correcto — parte de mobile y escala hacia arriba -->
+<div class="flex flex-col gap-4 md:flex-row md:gap-8">
+
+<!-- ❌ Incorrecto -->
+<div class="flex-row gap-8 max-md:flex-col">
+```
+
+### Container estándar — usar en todas las secciones
+
+```astro
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <!-- contenido -->
+</div>
+```
+
+### Secciones — padding vertical consistente
+
+```astro
+<!-- Sección estándar -->
+<section class="py-16 sm:py-20 lg:py-24">
+
+<!-- Sección hero (más grande) -->
+<section class="py-24 sm:py-32">
+
+<!-- Sección CTA -->
+<section class="py-16 bg-brand-600">
+```
+
+### Tipografía — escala consistente
+
+```astro
+<!-- Heading de sección -->
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+
+<!-- Subtítulo -->
+<p class="mt-4 text-lg leading-relaxed text-gray-500 max-w-2xl">
+
+<!-- Eyebrow (texto pequeño sobre el título) -->
+<p class="text-sm font-semibold uppercase tracking-widest text-brand-600">
+
+<!-- Cuerpo de texto -->
+<p class="text-base leading-7 text-gray-600">
+```
+
+### Colores — solo del design system
+
+```astro
+<!-- ✅ Colores definidos en tailwind.config.mjs -->
+<div class="bg-brand-600 text-white">
+<span class="text-brand-500">
+<div class="border-brand-100 bg-brand-50">
+
+<!-- ✅ Colores de Tailwind para neutros -->
+<p class="text-gray-900">    <!-- títulos -->
+<p class="text-gray-600">    <!-- cuerpo -->
+<p class="text-gray-400">    <!-- placeholders, disabled -->
+<div class="bg-gray-50">     <!-- fondos alternativos -->
+<div class="border-gray-100"> <!-- bordes sutiles -->
+
+<!-- ❌ No hardcodear hex -->
+<div style="color: #2563eb">
+```
+
+---
+
+## Animaciones con AOS
+
+### Configuración en BaseLayout.astro
+
+```astro
+<!-- Al final del <body> -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 600,
+    easing: 'ease-out-cubic',
+    once: true,          // anima solo una vez
+    offset: 80,
+    disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  });
+</script>
+```
+
+### Uso en componentes
+
+```astro
+<!-- Fade up estándar -->
+<div data-aos="fade-up">...</div>
+
+<!-- Con delay para grid de cards (stagger manual) -->
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+  <div data-aos="fade-up" data-aos-delay="0">...</div>
+  <div data-aos="fade-up" data-aos-delay="100">...</div>
+  <div data-aos="fade-up" data-aos-delay="200">...</div>
+</div>
+
+<!-- Fade lateral para secciones con imagen -->
+<div class="grid grid-cols-2 gap-12">
+  <div data-aos="fade-right"><!-- texto --></div>
+  <div data-aos="fade-left"><!-- imagen --></div>
+</div>
+```
+
+### Animaciones CSS para elementos que no necesitan scroll
+
+```css
+/* globals.css */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-hero {
+  animation: fadeIn 0.7s ease-out both;
+}
+.animate-hero-delay {
+  animation: fadeIn 0.7s ease-out 0.2s both;
+}
+```
+
+---
+
+## Formulario de Contacto
+
+```astro
+---
+// src/components/sections/Contact.astro
+---
+
+<section id="contacto" class="py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <form id="contact-form" class="space-y-6">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">
+          Nombre completo
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                 shadow-sm outline-none transition
+                 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          placeholder="Juan García"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">
+          Correo electrónico
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                 shadow-sm outline-none transition
+                 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          placeholder="juan@empresa.com"
+        />
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">
+          Mensaje
+        </label>
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          required
+          class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                 shadow-sm outline-none transition resize-none
+                 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          placeholder="¿En qué podemos ayudarte?"
+        ></textarea>
+      </div>
+
+      <!-- Feedback messages -->
+      <div id="form-success" class="hidden rounded-lg bg-green-50 p-4 text-sm text-green-700">
+        ✓ Mensaje enviado. Te responderemos pronto.
+      </div>
+      <div id="form-error" class="hidden rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        × Ocurrió un error. Intenta nuevamente.
+      </div>
+
+      <button
+        type="submit"
+        id="submit-btn"
+        class="w-full rounded-lg bg-brand-600 px-6 py-3 text-sm font-semibold text-white
+               shadow-sm transition hover:bg-brand-700 focus-visible:outline
+               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600
+               disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Enviar mensaje
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const success = document.getElementById('form-success')!;
+  const error = document.getElementById('form-error')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    success.classList.add('hidden');
+    error.classList.add('hidden');
+
+    try {
+      const data = new FormData(form);
+      const res = await fetch('/contact.php', { method: 'POST', body: data });
+      const json = await res.json();
+
+      if (json.success) {
+        success.classList.remove('hidden');
+        form.reset();
+      } else {
+        error.classList.remove('hidden');
+      }
+    } catch {
+      error.classList.remove('hidden');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enviar mensaje';
+    }
+  });
+</script>
+```
+
+---
+
+## Accesibilidad — Obligatorio
+
+```astro
+<!-- ✅ lang en <html> -->
+<html lang="es">
+
+<!-- ✅ Skip link al principio del body -->
+<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4
+   rounded bg-brand-600 px-4 py-2 text-white z-50">
+  Saltar al contenido
+</a>
+
+<!-- ✅ Landmarks semánticos -->
+<header role="banner">
+<nav aria-label="Navegación principal">
+<main id="main-content">
+<footer role="contentinfo">
+
+<!-- ✅ Alt en imágenes -->
+<img src="/images/equipo.jpg" alt="Equipo de trabajo de Empresa X en reunión" />
+<!-- Decorativas: -->
+<img src="/images/patron.svg" alt="" aria-hidden="true" />
+
+<!-- ✅ Focus visible en todos los interactivos -->
+<a class="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600">
+
+<!-- ✅ ARIA en el menú móvil -->
+<button aria-controls="mobile-menu" aria-expanded="false" aria-label="Abrir menú">
+```
+
+---
+
+## SEO — Por Página
+
+Cada página `.astro` debe pasar estas props al `BaseLayout`:
+
+```astro
+---
+// src/pages/index.astro
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Empresa X — Soluciones de Consultoría"
+  description="Ayudamos a empresas a crecer con consultoría especializada y tecnología. Más de 10 años de experiencia en Guatemala."
+  image="/images/og-home.jpg"
+>
+  <!-- secciones -->
+</BaseLayout>
+```
+
+**Reglas de SEO:**
+- `title`: máximo 60 caracteres, incluir nombre de empresa
+- `description`: 120–160 caracteres, con keyword principal
+- `image` OG: 1200×630px, JPG o PNG
+- Un solo `<h1>` por página
+- Jerarquía lógica: `h1` → `h2` → `h3` (no saltarse niveles)
+- URLs en español y descriptivas: `/servicios/`, `/nosotros/`
+
+---
+
+## Imágenes — Reglas
+
+```astro
+<!-- ✅ Usar <Image> de Astro para optimización automática -->
+import { Image } from 'astro:assets';
+import heroImg from '@/assets/images/hero.jpg';
+
+<Image
+  src={heroImg}
+  alt="Descripción del contenido"
+  width={1200}
+  height={600}
+  format="webp"
+  quality={85}
+  loading="eager"   <!-- hero: eager -->
+  loading="lazy"    <!-- resto: lazy -->
+/>
+
+<!-- ✅ Para imágenes externas o de /public, usar <img> con width/height para prevenir CLS -->
+<img
+  src="/images/logo-cliente.png"
+  alt="Logo Cliente XYZ"
+  width="160"
+  height="60"
+  loading="lazy"
+  decoding="async"
+/>
+```
+
+**Tamaños recomendados:**
+- Hero: 1920×1080px, < 200KB en WebP
+- Thumbnails servicios: 600×400px, < 60KB
+- Logos clientes: PNG transparente, < 20KB
+- Fotos equipo: 400×400px, cuadradas, < 50KB
+
+---
+
+## Prohibido
+
+```astro
+<!-- ❌ No usar JavaScript para lo que puede hacer CSS -->
+<!-- ❌ No cargar librerías pesadas si no son necesarias (jQuery, Bootstrap) -->
+<!-- ❌ No usar client:load en componentes que no necesitan interactividad -->
+<!-- ❌ No dejar console.log en producción -->
+<!-- ❌ No usar <style> inline cuando Tailwind puede manejarlo -->
+<!-- ❌ No poner lógica de negocio en .astro — extraer a src/data/ o src/lib/ -->
+<!-- ❌ No omitir alt en imágenes -->
+<!-- ❌ No subir imágenes sin optimizar (> 500KB) -->
+<!-- ❌ No hardcodear texto que puede ser dato en src/data/ -->
+```

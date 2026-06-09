@@ -1,0 +1,280 @@
+---
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import Button from '@components/ui/Button.astro';
+import { Icon } from 'astro-icon/components';
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  ADDRESS,
+  MAPS_EMBED_URL,
+  WHATSAPP_URL,
+} from '@data/site';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+---
+
+<section id="contacto" class="bg-brand-navy-50 py-16 sm:py-20 lg:py-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <SectionTitle
+      eyebrow="Contacto"
+      title="Estamos listos para atenderle"
+      description="Cuéntenos sobre su operación logística y nuestro equipo le responderá a la brevedad."
+      align="center"
+    />
+
+    <div class="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-2">
+      <div class="space-y-8" data-aos="fade-right">
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-red/10 text-brand-red">
+              <Icon name="mdi:map-marker" class="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-brand-navy">Dirección</h3>
+              <address class="mt-1 not-italic text-sm leading-relaxed text-gray-600">
+                {ADDRESS.street}<br />
+                {ADDRESS.building}<br />
+                {ADDRESS.city}, {ADDRESS.country}
+              </address>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-red/10 text-brand-red">
+              <Icon name="mdi:phone" class="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-brand-navy">Teléfono PBX</h3>
+              <a
+                href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`}
+                class="mt-1 text-sm text-gray-600 hover:text-brand-red"
+              >
+                {CONTACT_PHONE}
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-red/10 text-brand-red">
+              <Icon name="mdi:email" class="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-brand-navy">Correo electrónico</h3>
+              <a href={`mailto:${CONTACT_EMAIL}`} class="mt-1 text-sm text-gray-600 hover:text-brand-red">
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/10 text-[#25D366]">
+              <Icon name="mdi:whatsapp" class="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <h3 class="font-semibold text-brand-navy">WhatsApp Business</h3>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-1 text-sm text-gray-600 hover:text-brand-red"
+              >
+                +502 4390-5425
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-hidden rounded-2xl shadow-sm">
+          <iframe
+            src={MAPS_EMBED_URL}
+            width="100%"
+            height="280"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Ubicación de SICSA GROUP en Empresarial El Cortijo II, Zona 12"
+            class="w-full"
+          ></iframe>
+        </div>
+      </div>
+
+      <div
+        class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8"
+        data-aos="fade-left"
+      >
+        <h3 class="text-xl font-bold text-brand-navy">Envíenos un mensaje</h3>
+        <p class="mt-2 text-sm text-gray-500">Los campos marcados con * son obligatorios.</p>
+
+        <form id="contact-form" class="mt-6 space-y-5" novalidate>
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">
+              Nombre completo <span class="text-brand-red">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              maxlength="100"
+              autocomplete="name"
+              class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
+              placeholder="Juan Pérez"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              Correo electrónico <span class="text-brand-red">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              maxlength="150"
+              autocomplete="email"
+              class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
+              placeholder="juan@empresa.com"
+            />
+          </div>
+
+          <div>
+            <label for="address" class="block text-sm font-medium text-gray-700">
+              Dirección <span class="text-brand-red">*</span>
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              required
+              maxlength="200"
+              autocomplete="street-address"
+              class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
+              placeholder="Ciudad de Guatemala"
+            />
+          </div>
+
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700">
+              Teléfono <span class="text-brand-red">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              maxlength="30"
+              autocomplete="tel"
+              class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
+              placeholder="+502 0000-0000"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700">
+              Comentarios <span class="text-brand-red">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              required
+              maxlength="2000"
+              class="mt-1 block w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
+              placeholder="¿En qué podemos ayudarle?"
+            ></textarea>
+          </div>
+
+          {
+            turnstileSiteKey ? (
+              <div
+                class="cf-turnstile"
+                data-sitekey={turnstileSiteKey}
+                data-theme="light"
+              />
+            ) : (
+              <p class="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+                Configure PUBLIC_TURNSTILE_SITE_KEY en .env para activar la verificación anti-bot.
+              </p>
+            )
+          }
+
+          <div id="form-success" class="hidden rounded-lg bg-green-50 p-4 text-sm text-green-700" role="status">
+            Mensaje enviado correctamente. Le responderemos pronto.
+          </div>
+          <div id="form-error" class="hidden rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
+            Ocurrió un error al enviar. Intente nuevamente.
+          </div>
+
+          <Button type="submit" variant="primary" id="submit-btn" class="w-full">
+            Enviar mensaje
+          </Button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{
+  turnstileSiteKey && (
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  )
+}
+
+<script>
+  interface TurnstileApi {
+    reset: (element: Element) => void;
+  }
+
+  interface WindowWithTurnstile extends Window {
+    turnstile?: TurnstileApi;
+  }
+
+  const win = window as WindowWithTurnstile;
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const success = document.getElementById('form-success');
+  const error = document.getElementById('form-error');
+
+  if (form && btn && success && error) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+      success.classList.add('hidden');
+      error.classList.add('hidden');
+
+      try {
+        const data = new FormData(form);
+        const turnstileInput = form.querySelector<HTMLInputElement>(
+          'input[name="cf-turnstile-response"]',
+        );
+        if (turnstileInput?.value) {
+          data.append('cf-turnstile-response', turnstileInput.value);
+        }
+
+        const res = await fetch('/contact.php', { method: 'POST', body: data });
+        const json = (await res.json()) as { success: boolean; message?: string };
+
+        if (json.success) {
+          success.classList.remove('hidden');
+          form.reset();
+          const widget = form.querySelector('.cf-turnstile');
+          if (win.turnstile && widget) {
+            win.turnstile.reset(widget);
+          }
+        } else {
+          error.textContent = json.message ?? 'Ocurrió un error al enviar. Intente nuevamente.';
+          error.classList.remove('hidden');
+        }
+      } catch {
+        error.textContent = 'Error de conexión. Verifique su red e intente nuevamente.';
+        error.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enviar mensaje';
+      }
+    });
+  }
+</script>

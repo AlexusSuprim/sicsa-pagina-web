@@ -1,0 +1,6 @@
+Nuestras raíces
+Servicios Integrados de Carga y Logística, S.A. fue fundado en abril de 1999 por socios netamente guatemaltecos,  expertos en logística aduanera y comercio internacional. En el transcurso de estos años, hemos experimentado los cambios y la actualización de los procedimientos logísticos en aduanas, carga internacional y transporte terrestre.  17 años de experiencia nos ha convertido en una empresa líder en servicios logísticos.
+
+Estamos conformados por un equipo multidisciplinario compuesto por Agentes aduaneros, agentes de carga, gestores de importación y exportación, operadores y transportistas, por lo que estamos seguros de proveerles un servicio ético y profesional con los más altos estándares de calidad.
+
+Proveemos un diferencial en consultoría para ayudarle a tomar las mejores decisiones para sus negocios en logística. Nos adaptamos al mercado y al ambiente en donde se desarrollan nuestros clientes y sus marcas, dando así la oportunidad de innovar y liderar la industria.

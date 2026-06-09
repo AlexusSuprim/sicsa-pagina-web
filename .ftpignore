@@ -1,0 +1,11 @@
+node_modules/
+src/
+.git/
+.env
+*.config.mjs
+*.config.ts
+tsconfig.json
+package*.json
+docs/
+.cursor/
+CLAUDE.md

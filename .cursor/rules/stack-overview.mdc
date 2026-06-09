@@ -1,0 +1,329 @@
+# Stack para Sitio Web Institucional — Astro + Namecheap
+
+> **Propósito:** Referencia de arquitectura y decisiones tecnológicas para sitios web institucionales
+> desplegados en Namecheap shared hosting. Renombra a `.mdc` y carga en Cursor Rules.
+
+---
+
+## Por qué este stack
+
+Namecheap shared hosting sirve archivos estáticos (HTML, CSS, JS) y ejecuta PHP.
+**No soporta** servidores Node.js en background (Next.js, NestJS, etc.).
+
+**Astro** es el generador ideal porque:
+- Compila todo a HTML/CSS/JS puro en la carpeta `/dist`
+- Cero JavaScript en el cliente por defecto (las páginas cargan instantáneamente)
+- Soporte nativo de TypeScript, Tailwind CSS y componentes React/Vue/Svelte opcionales
+- El resultado del `npm run build` se sube directamente al hosting por FTP
+
+---
+
+## Stack Completo
+
+| Capa | Tecnología | Razón |
+|---|---|---|
+| Generador | **Astro 4+** | Output HTML estático, zero-JS por defecto, ideal para hosting compartido |
+| Lenguaje | **TypeScript** | Tipado estático, mejor DX en Cursor |
+| Estilos | **Tailwind CSS v3+** | Se compila a CSS puro en build, mobile-first, design tokens |
+| Componentes | **Astro Components** (`.astro`) | Sin JS en el cliente salvo que se indique `client:load` |
+| Animaciones | **AOS (Animate On Scroll)** + **CSS nativo** | Ligero, sin runtime, funciona en cualquier browser |
+| Formulario de contacto | **PHP nativo** (`contact.php`) | Ya disponible en Namecheap, sin backend adicional |
+| Íconos | **Astro Icon** + **Iconify** | SVG inline, tree-shakeable, sin fuente externa |
+| Fuentes | **Fuentes locales** o **Bunny Fonts** | Sin depender de Google Fonts (privacidad + velocidad) |
+| Deploy | **FTP / Git Deploy de Namecheap** | Subir carpeta `/dist` generada en build |
+
+---
+
+## Arquitectura del Proyecto
+
+```
+mi-sitio-institucional/
+├── public/                     # Archivos copiados tal cual al /dist
+│   ├── images/                 # Imágenes (optimizar antes de subir)
+│   ├── fonts/                  # Fuentes locales (.woff2)
+│   ├── favicon.ico
+│   └── contact.php             # Manejador del formulario de contacto (PHP)
+├── src/
+│   ├── components/
+│   │   ├── layout/             # Header, Footer, Nav, MobileMenu
+│   │   ├── sections/           # Hero, About, Services, Team, Contact, CTA
+│   │   └── ui/                 # Button, Card, Badge, SectionTitle (reutilizables)
+│   ├── layouts/
+│   │   └── BaseLayout.astro    # Layout principal con <head>, SEO, scripts globales
+│   ├── pages/
+│   │   ├── index.astro         # Home
+│   │   ├── nosotros.astro      # Quiénes somos
+│   │   ├── servicios.astro     # Servicios / Productos
+│   │   ├── contacto.astro      # Página de contacto
+│   │   └── 404.astro           # Página de error
+│   ├── content/                # Colecciones de contenido (opcional, para blogs)
+│   │   └── blog/
+│   ├── styles/
+│   │   └── globals.css         # Tailwind base + CSS variables + estilos globales
+│   └── data/                   # Datos estáticos (servicios, equipo, testimonios)
+│       ├── services.ts
+│       ├── team.ts
+│       └── testimonials.ts
+├── astro.config.mjs
+├── tailwind.config.mjs
+└── tsconfig.json
+```
+
+---
+
+## Configuración Base
+
+### astro.config.mjs
+
+```javascript
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+import icon from 'astro-icon';
+
+export default defineConfig({
+  // Para subir a Namecheap en la raíz del dominio
+  site: 'https://tudominio.com',
+
+  // Output estático — genera /dist con HTML/CSS/JS puro
+  output: 'static',
+
+  integrations: [
+    tailwind({ applyBaseStyles: false }),
+    icon(),
+  ],
+
+  // Comprimir HTML en producción
+  compressHTML: true,
+
+  build: {
+    // Genera URLs limpias: /nosotros/ en vez de /nosotros.html
+    format: 'directory',
+  },
+});
+```
+
+### tailwind.config.mjs
+
+```javascript
+import defaultTheme from 'tailwindcss/defaultTheme';
+
+export default {
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['InterVariable', ...defaultTheme.fontFamily.sans],
+        display: ['CalSans', ...defaultTheme.fontFamily.sans],
+      },
+      colors: {
+        // Definir la paleta de la marca aquí
+        brand: {
+          50:  '#eff6ff',
+          100: '#dbeafe',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+          900: '#1e3a8a',
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+### tsconfig.json
+
+```json
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@data/*": ["src/data/*"]
+    }
+  }
+}
+```
+
+---
+
+## SEO — Configuración por Página
+
+```astro
+---
+// src/layouts/BaseLayout.astro
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  image = '/images/og-default.jpg',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+const siteName = 'Nombre de tu Empresa';
+const fullTitle = `${title} | ${siteName}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <title>{fullTitle}</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body class="bg-white text-gray-900 antialiased">
+    <slot />
+  </body>
+</html>
+```
+
+---
+
+## Formulario de Contacto con PHP
+
+```php
+<?php
+// public/contact.php — ejecutado en el servidor Namecheap
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: https://tudominio.com');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+    exit;
+}
+
+// Sanitizar entradas
+$name    = htmlspecialchars(strip_tags(trim($_POST['name'] ?? '')));
+$email   = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+$message = htmlspecialchars(strip_tags(trim($_POST['message'] ?? '')));
+
+// Validar
+if (empty($name) || empty($email) || empty($message)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios']);
+    exit;
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Email inválido']);
+    exit;
+}
+
+// Enviar email
+$to      = 'contacto@tudominio.com';
+$subject = "Nuevo mensaje de $name desde el sitio web";
+$body    = "Nombre: $name\nEmail: $email\n\nMensaje:\n$message";
+$headers = "From: noreply@tudominio.com\r\nReply-To: $email\r\n";
+
+if (mail($to, $subject, $body, $headers)) {
+    echo json_encode(['success' => true, 'message' => 'Mensaje enviado correctamente']);
+} else {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error al enviar. Intenta nuevamente.']);
+}
+```
+
+---
+
+## Deploy en Namecheap
+
+### Flujo de trabajo
+
+```
+1. npm run build          → genera /dist con todo el sitio estático
+2. Subir /dist por FTP    → a public_html/ en Namecheap cPanel
+3. contact.php ya está    → en /dist porque viene de /public
+```
+
+### .ftpignore (raíz del proyecto)
+
+```
+node_modules/
+src/
+.git/
+.env
+*.config.mjs
+*.config.ts
+tsconfig.json
+package*.json
+```
+
+### Estructura en Namecheap (cPanel File Manager)
+
+```
+public_html/
+├── index.html
+├── nosotros/
+│   └── index.html
+├── servicios/
+│   └── index.html
+├── contacto/
+│   └── index.html
+├── contact.php
+├── _astro/            ← CSS y JS compilados (hasheados)
+├── images/
+└── fonts/
+```
+
+---
+
+## Performance — Objetivos
+
+| Métrica | Objetivo |
+|---|---|
+| Lighthouse Performance | > 95 |
+| LCP (Largest Contentful Paint) | < 1.5s |
+| CLS (Cumulative Layout Shift) | 0 |
+| TBT (Total Blocking Time) | < 50ms |
+| Tamaño total página | < 500KB |
+
+Esto es alcanzable porque Astro no envía JavaScript al cliente por defecto.
+
+---
+
+## Checklist Antes de Subir a Namecheap
+
+- [ ] `npm run build` sin errores
+- [ ] Revisar `/dist` — que existan todas las páginas
+- [ ] Imágenes optimizadas (WebP, < 200KB por imagen)
+- [ ] `contact.php` en `/dist` (viene de `/public`)
+- [ ] Cambiar el email destino en `contact.php`
+- [ ] Verificar que el dominio apunta a `public_html/`
+- [ ] Probar formulario de contacto en producción
+- [ ] Revisar en mobile (320px, 375px, 414px)
+- [ ] Revisar en desktop (1280px, 1440px, 1920px)
+- [ ] Verificar meta tags con [og:debugger de Facebook](https://developers.facebook.com/tools/debug/)
+- [ ] Verificar en [Google Rich Results Test](https://search.google.com/test/rich-results)
+- [ ] Sitemap generado y enlazado en `<head>`
+- [ ] `robots.txt` en `/public`

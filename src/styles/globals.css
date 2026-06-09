@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* Montserrat — cuerpo y navegación (Bunny Fonts, SIL Open Font License) */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * Gilroy — títulos y display (fuente comercial)
+ * Descomentar y colocar archivos .woff2 en /public/fonts/ cuando estén disponibles:
+ *
+ * @font-face {
+ *   font-family: 'Gilroy';
+ *   src: url('/fonts/Gilroy-Bold.woff2') format('woff2');
+ *   font-weight: 700;
+ *   font-style: normal;
+ *   font-display: swap;
+ * }
+ */
+
+@theme {
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Gilroy', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-navy: #1b2b48;
+  --color-brand-navy-light: #2a3f63;
+  --color-brand-navy-50: #f0f3f8;
+  --color-brand-navy-100: #dce3ef;
+  --color-brand-red: #d12027;
+  --color-brand-red-dark: #a8181e;
+  --color-brand-blue: #2b6cb0;
+  --color-brand-blue-light: #4a90d9;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-gray-700 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-brand-navy;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero {
+  animation: fadeIn 0.7s ease-out both;
+}
+
+.animate-hero-delay {
+  animation: fadeIn 0.7s ease-out 0.2s both;
+}
+
+.animate-hero-delay-2 {
+  animation: fadeIn 0.7s ease-out 0.4s both;
+}
+
+/* Fallback: evitar secciones en blanco si AOS no inicializa */
+body:not(.aos-init) [data-aos] {
+  opacity: 1 !important;
+  transform: none !important;
+}

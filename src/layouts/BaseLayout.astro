@@ -1,0 +1,113 @@
+---
+import '@/styles/globals.css';
+import 'aos/dist/aos.css';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+import WhatsAppButton from '@components/layout/WhatsAppButton.astro';
+import {
+  SITE_NAME,
+  SITE_URL,
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  ADDRESS,
+} from '@data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title,
+  description,
+  image = '/images/og-default.jpg',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+const fullTitle = `${title} | ${SITE_NAME}`;
+const ogImage = new URL(image, SITE_URL).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: SITE_NAME,
+  description,
+  url: SITE_URL,
+  email: CONTACT_EMAIL,
+  telephone: CONTACT_PHONE,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${ADDRESS.street}, ${ADDRESS.building}`,
+    addressLocality: ADDRESS.city,
+    addressCountry: 'GT',
+  },
+  sameAs: [],
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_GT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{fullTitle}</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="bg-white text-gray-900">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-red focus:px-4 focus:py-2 focus:text-white"
+    >
+      Saltar al contenido
+    </a>
+
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppButton />
+
+    <script>
+      import AOS from 'aos';
+
+      function initAos(): void {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        AOS.init({
+          duration: 600,
+          easing: 'ease-out-cubic',
+          once: true,
+          offset: 80,
+          disable: prefersReduced,
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAos);
+      } else {
+        initAos();
+      }
+    </script>
+  </body>
+</html>

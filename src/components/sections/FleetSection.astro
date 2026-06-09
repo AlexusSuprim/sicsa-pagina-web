@@ -1,0 +1,48 @@
+---
+import SectionTitle from '@components/ui/SectionTitle.astro';
+import { Icon } from 'astro-icon/components';
+import { fleetItems } from '@data/company-stats';
+---
+
+<section class="bg-brand-navy py-16 sm:py-20 lg:py-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <SectionTitle
+      eyebrow="Nuestra flota propia"
+      title="Controlamos el camino"
+      description="Al ser dueños de nuestros activos, garantizamos disponibilidad, seguridad total y monitoreo GPS las 24 horas bajo el modelo puerta a puerta."
+      align="center"
+      light
+    />
+
+    <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+      {
+        fleetItems.map((item, index) => (
+          <div
+            class="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm"
+            data-aos="fade-up"
+            data-aos-delay={index * 100}
+          >
+            <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-red/20 text-brand-red">
+              <Icon name={item.icon} class="h-6 w-6" aria-hidden="true" />
+            </div>
+            <h3 class="text-lg font-bold text-white">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/70">{item.description}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-12 rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <Icon name="mdi:map-marker-path" class="mx-auto h-8 w-8 text-brand-red" aria-hidden="true" />
+      <p class="mt-4 text-lg font-semibold text-white">Seguridad puerta a puerta</p>
+      <p class="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-white/70">
+        Custodiamos su mercancía con monitoreo satelital. Si está con nosotros, está segura.
+        Conectamos fronteras en el corredor México–Centroamérica con salidas semanales desde
+        Ciudad Hidalgo.
+      </p>
+    </div>
+  </div>
+</section>

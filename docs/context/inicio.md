@@ -1,0 +1,1 @@
+Servicios Integrados Cargo es una empresa experta en Logistica, con años de experiencia en consolidación y desconsolidación de carga aérea, marítima y terrestre. Asimismo, contamos con transporte terrestre y Logistica aduanal.

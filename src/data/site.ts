@@ -3,6 +3,34 @@ export const SITE_TAGLINE = 'Logística que mueve al mundo';
 export const SITE_DESCRIPTION =
   'Tu socio estratégico en comercio exterior y soluciones logísticas integrales en Guatemala. Transporte marítimo, aéreo, terrestre y logística aduanal.';
 
+export interface HeroSlide {
+  title: string;
+  subtitle: string;
+  durationMs: number;
+}
+
+export const HERO_SLIDE_DEFAULT_DURATION_MS = 15_000;
+export const HERO_SLIDE_LEMA_DURATION_MS = 10_000;
+
+export const heroSlides: HeroSlide[] = [
+  {
+    title: SITE_TAGLINE,
+    subtitle: SITE_DESCRIPTION,
+    durationMs: HERO_SLIDE_DEFAULT_DURATION_MS,
+  },
+  {
+    title: 'Nuestro Lema',
+    subtitle: 'Consolidarnos como la mejor opción del mercado',
+    durationMs: HERO_SLIDE_LEMA_DURATION_MS,
+  },
+  {
+    title: 'Más de 25 años moviendo al mundo',
+    subtitle:
+      'Tiempo que nos ha convertido en referentes de servicio en la región, expertos en logística aduanera y comercio internacional',
+    durationMs: HERO_SLIDE_DEFAULT_DURATION_MS,
+  },
+];
+
 export const SITE_URL = 'https://sicsagroup.com.gt';
 
 export const CONTACT_EMAIL = 'info@sicsagroup.com.gt';
@@ -25,6 +53,7 @@ export const MAPS_EMBED_URL =
 
 export const SOCIAL_LINKS = {
   facebook: '#',
+  instagram: '#',
   twitter: '#',
   linkedin: '#',
 } as const;

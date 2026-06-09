@@ -31,6 +31,7 @@ export default defineConfig({
     icon({
       include: {
         mdi: ['*'],
+        'simple-icons': ['x'],
       },
     }),
   ],

@@ -2,8 +2,15 @@
 import { Image } from 'astro:assets';
 import Button from '@components/ui/Button.astro';
 import Badge from '@components/ui/Badge.astro';
-import { SITE_TAGLINE, SITE_DESCRIPTION } from '@data/site';
+import { heroSlides } from '@data/site';
+
+const slideDurations = heroSlides.map((slide) => slide.durationMs);
 import heroImage from '@/assets/images/hero-logistics.jpg';
+
+const titleClasses =
+  'text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl';
+const subtitleClasses = 'mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl';
+const slideCount = heroSlides.length;
 ---
 
 <section
@@ -28,12 +35,64 @@ import heroImage from '@/assets/images/hero-logistics.jpg';
         <Badge text="SICSA GROUP" />
         <span class="text-sm font-medium text-white/70">· SANTAL GROUP</span>
       </div>
-      <h1 class="animate-hero-delay mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-        {SITE_TAGLINE}
-      </h1>
-      <p class="animate-hero-delay-2 mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-        {SITE_DESCRIPTION}
-      </p>
+
+      <div
+        id="hero-carousel"
+        class="hero-carousel animate-hero-delay mt-6"
+        aria-roledescription="carrusel"
+        aria-label="Mensajes principales"
+        data-slide-count={slideCount}
+        data-durations={JSON.stringify(slideDurations)}
+      >
+        <div class="hero-carousel-viewport">
+          <div id="hero-carousel-track" class="hero-carousel-track">
+            {
+              heroSlides.map((slide, index) => (
+                <div
+                  class="hero-carousel-slide"
+                  role="group"
+                  aria-roledescription="diapositiva"
+                  aria-label={`${index + 1} de ${slideCount}`}
+                  data-slide={index}
+                >
+                  {index === 0 ? (
+                    <h1 class={titleClasses}>{slide.title}</h1>
+                  ) : (
+                    <p class={titleClasses}>{slide.title}</p>
+                  )}
+                  <p class={subtitleClasses}>{slide.subtitle}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="hero-carousel-controls" aria-hidden="false">
+          <div
+            id="hero-carousel-dots"
+            class="hero-carousel-dots"
+            role="tablist"
+            aria-label="Seleccionar mensaje"
+          >
+            {
+              heroSlides.map((slide, index) => (
+                <button
+                  type="button"
+                  class:list={['hero-carousel-dot', { 'is-active': index === 0 }]}
+                  role="tab"
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                  aria-label={`${slide.title}`}
+                  data-slide-to={index}
+                />
+              ))
+            }
+          </div>
+          <div class="hero-carousel-progress" aria-hidden="true">
+            <div id="hero-carousel-progress-bar" class="hero-carousel-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="animate-hero-delay-2 mt-10 flex flex-col gap-4 sm:flex-row">
         <Button href="#servicios" variant="primary" size="lg">
           Nuestros servicios
@@ -45,3 +104,195 @@ import heroImage from '@/assets/images/hero-logistics.jpg';
     </div>
   </div>
 </section>
+
+<style>
+  .hero-carousel {
+    --hero-interval: 15s;
+  }
+
+  .hero-carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .hero-carousel-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  .hero-carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .hero-carousel-controls {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .hero-carousel-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero-carousel-dot {
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 9999px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background-color: rgb(255 255 255 / 0.35);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .hero-carousel-dot:hover {
+    background-color: rgb(255 255 255 / 0.6);
+  }
+
+  .hero-carousel-dot.is-active {
+    background-color: #d12027;
+    transform: scaleX(1.1);
+  }
+
+  .hero-carousel-dot:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  .hero-carousel-progress {
+    width: 100%;
+    max-width: 12rem;
+    height: 3px;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255 / 0.2);
+    overflow: hidden;
+  }
+
+  .hero-carousel-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 9999px;
+    background-color: #d12027;
+  }
+
+  .hero-carousel.is-playing .hero-carousel-progress-bar {
+    animation: heroProgress var(--hero-interval) linear forwards;
+  }
+
+  @keyframes heroProgress {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-carousel-track {
+      transition: none;
+    }
+
+    .hero-carousel-progress-bar {
+      animation: none !important;
+      width: 50%;
+    }
+  }
+</style>
+
+<script>
+  const carousel = document.getElementById('hero-carousel');
+  const track = document.getElementById('hero-carousel-track');
+  const progressBar = document.getElementById('hero-carousel-progress-bar');
+  const dots = carousel
+    ? Array.from(carousel.querySelectorAll<HTMLButtonElement>('.hero-carousel-dot'))
+    : [];
+
+  if (carousel && track && progressBar) {
+    const slideCount = Number(carousel.dataset.slideCount) || 1;
+    const slideDurations: number[] = JSON.parse(carousel.dataset.durations ?? '[15000]');
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let currentIndex = 0;
+    let timerId: ReturnType<typeof setTimeout> | undefined;
+
+    function getSlideDuration(index: number): number {
+      return slideDurations[index] ?? 15_000;
+    }
+
+    function goToSlide(index: number): void {
+      currentIndex = ((index % slideCount) + slideCount) % slideCount;
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      dots.forEach((dot, i) => {
+        const isActive = i === currentIndex;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    }
+
+    function restartProgressBar(durationMs: number): void {
+      carousel.style.setProperty('--hero-interval', `${durationMs}ms`);
+      progressBar.style.removeProperty('animation');
+      carousel.classList.remove('is-playing');
+      void progressBar.offsetWidth;
+      if (!prefersReduced && slideCount > 1) {
+        carousel.classList.add('is-playing');
+      }
+    }
+
+    function scheduleNextSlide(): void {
+      if (prefersReduced || slideCount <= 1) return;
+      if (timerId) clearTimeout(timerId);
+
+      const durationMs = getSlideDuration(currentIndex);
+      restartProgressBar(durationMs);
+
+      timerId = setTimeout(() => {
+        goToSlide(currentIndex + 1);
+        scheduleNextSlide();
+      }, durationMs);
+    }
+
+    function startAutoplay(): void {
+      scheduleNextSlide();
+    }
+
+    function stopAutoplay(): void {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = undefined;
+      }
+      carousel.classList.remove('is-playing');
+      progressBar.style.removeProperty('animation');
+    }
+
+    function restartAutoplay(): void {
+      stopAutoplay();
+      startAutoplay();
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const target = Number(dot.dataset.slideTo);
+        if (!Number.isNaN(target)) {
+          goToSlide(target);
+          restartAutoplay();
+        }
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+
+    goToSlide(0);
+    startAutoplay();
+  }
+</script>

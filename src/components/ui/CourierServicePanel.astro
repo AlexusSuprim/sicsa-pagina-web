@@ -22,7 +22,7 @@ const socialItems = [
   <summary
     class="courier-panel__summary grid cursor-pointer list-none grid-cols-1 lg:grid-cols-2"
   >
-    <div class="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+    <div class="order-2 flex flex-col justify-center p-6 sm:p-8 lg:order-1 lg:p-10">
       <div
         class="mb-4 inline-flex h-[3.75rem] items-center justify-center self-start rounded-xl border border-gray-100 bg-white px-3"
       >
@@ -54,7 +54,7 @@ const socialItems = [
       </span>
     </div>
 
-    <div class="relative aspect-[4/3] lg:aspect-auto lg:min-h-[320px]">
+    <div class="relative order-1 aspect-[4/3] lg:order-2 lg:aspect-auto lg:min-h-[320px]">
       <img
         src={courierService.image}
         alt={courierService.imageAlt}

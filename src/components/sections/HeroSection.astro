@@ -8,8 +8,9 @@ const slideDurations = heroSlides.map((slide) => slide.durationMs);
 import heroImage from '@/assets/images/hero-logistics.jpg';
 
 const titleClasses =
-  'text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl';
-const subtitleClasses = 'mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl';
+  'text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl';
+const subtitleClasses =
+  'mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:mt-6 sm:text-lg sm:text-xl';
 const slideCount = heroSlides.length;
 ---
 
@@ -29,8 +30,8 @@ const slideCount = heroSlides.length;
   />
   <div class="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/80 to-brand-navy/50"></div>
 
-  <div class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-    <div class="max-w-3xl">
+  <div class="relative mx-auto w-full min-w-0 max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+    <div class="w-full min-w-0 max-w-3xl">
       <div class="animate-hero flex flex-wrap items-center gap-3">
         <Badge text="SICSA GROUP" />
         <span class="text-sm font-medium text-white/70">· SANTAL GROUP</span>
@@ -93,11 +94,11 @@ const slideCount = heroSlides.length;
         </div>
       </div>
 
-      <div class="animate-hero-delay-2 mt-10 flex flex-col gap-4 sm:flex-row">
-        <Button href="#servicios" variant="primary" size="lg">
+      <div class="animate-hero-delay-2 mt-10 flex w-full max-w-full flex-col gap-4 sm:flex-row">
+        <Button href="#servicios" variant="primary" size="lg" class="w-full sm:w-auto">
           Nuestros servicios
         </Button>
-        <Button href="#contacto" variant="outline" size="lg">
+        <Button href="#contacto" variant="outline" size="lg" class="w-full sm:w-auto">
           Contáctanos
         </Button>
       </div>
@@ -113,11 +114,11 @@ const slideCount = heroSlides.length;
   .hero-carousel-viewport {
     overflow: hidden;
     width: 100%;
+    max-width: 100%;
   }
 
   .hero-carousel-track {
     display: flex;
-    width: 100%;
     transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
   }
@@ -125,7 +126,11 @@ const slideCount = heroSlides.length;
   .hero-carousel-slide {
     flex: 0 0 100%;
     width: 100%;
-    min-width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .hero-carousel-controls {
@@ -211,12 +216,13 @@ const slideCount = heroSlides.length;
 <script>
   const carousel = document.getElementById('hero-carousel');
   const track = document.getElementById('hero-carousel-track');
+  const viewport = carousel?.querySelector<HTMLElement>('.hero-carousel-viewport');
   const progressBar = document.getElementById('hero-carousel-progress-bar');
   const dots = carousel
     ? Array.from(carousel.querySelectorAll<HTMLButtonElement>('.hero-carousel-dot'))
     : [];
 
-  if (carousel && track && progressBar) {
+  if (carousel && track && viewport && progressBar) {
     const slideCount = Number(carousel.dataset.slideCount) || 1;
     const slideDurations: number[] = JSON.parse(carousel.dataset.durations ?? '[15000]');
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -229,7 +235,8 @@ const slideCount = heroSlides.length;
 
     function goToSlide(index: number): void {
       currentIndex = ((index % slideCount) + slideCount) % slideCount;
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+      const slideWidth = viewport.clientWidth;
+      track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
 
       dots.forEach((dot, i) => {
         const isActive = i === currentIndex;
@@ -291,6 +298,10 @@ const slideCount = heroSlides.length;
 
     carousel.addEventListener('mouseenter', stopAutoplay);
     carousel.addEventListener('mouseleave', startAutoplay);
+
+    window.addEventListener('resize', () => {
+      goToSlide(currentIndex);
+    });
 
     goToSlide(0);
     startAutoplay();

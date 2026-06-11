@@ -1,6 +1,8 @@
 export interface ServiceItem {
   id: string;
   icon: string;
+  /** Marca visual opcional (p. ej. logotipo Courier) en lugar del ícono MDI */
+  logoImage?: string;
   title: string;
   description: string;
   image: string;
@@ -46,7 +48,7 @@ export const services: ServiceItem[] = [
     title: 'Transporte Terrestre Internacional',
     description:
       'Flota propia y alianzas con Freight Forwarders para consolidar carga en Ciudad Hidalgo y conectar México con toda Centroamérica.',
-    image: '/images/services/truck.jpg',
+    image: '/images/services/land.jpg',
     features: [
       'Carga consolidada (LTL) con cuatro consolidados semanales',
       'Carga completa (FTL)',
@@ -72,8 +74,25 @@ export const services: ServiceItem[] = [
     ],
   },
   {
+    id: 'warehousing',
+    icon: 'mdi:warehouse',
+    title: 'Bodegaje',
+    description:
+      'Soluciones de bodegaje estratégico diseñadas para adaptarse a sus picos de demanda y temporadas altas, con el espacio y la infraestructura necesarios para el resguardo seguro de una amplia gama de productos.',
+    image: '/images/services/truck.jpg',
+    features: [
+      'Bodegaje estratégico para picos de demanda y temporadas altas',
+      'Integración con aduanas y transporte: consolidación, resguardo y despacho',
+      'Maniobras de carga y descarga con equipo especializado',
+      'Personal entrenado para el manejo de productos delicados',
+      'Control de inventarios y preparación de pedidos',
+      'Optimización de costos al reducir tiempos de estancia',
+    ],
+  },
+  {
     id: 'courier',
     icon: 'mdi:package-variant-closed',
+    logoImage: '/images/Logo_SICSA_COURIER_FINAL.png',
     title: 'Courier y P.O. Box',
     description:
       'Compras en Estados Unidos de forma fácil, rápida y segura. Llevamos sus paquetes hasta la puerta de su hogar u oficina.',

@@ -1,8 +1,12 @@
 // @ts-check
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import icon from 'astro-icon';
+
+const root = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,10 +22,10 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
-        '@': '/src',
-        '@components': '/src/components',
-        '@layouts': '/src/layouts',
-        '@data': '/src/data',
+        '@': path.resolve(root, 'src'),
+        '@components': path.resolve(root, 'src/components'),
+        '@layouts': path.resolve(root, 'src/layouts'),
+        '@data': path.resolve(root, 'src/data'),
       },
     },
   },

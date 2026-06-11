@@ -7,6 +7,8 @@ import {
   CONTACT_PHONE,
   ADDRESS,
   MAPS_EMBED_URL,
+  MAPS_OPEN_URL,
+  WHATSAPP_CHAT_URL,
   WHATSAPP_URL,
 } from '@data/site';
 
@@ -32,9 +34,16 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
             <div>
               <h3 class="font-semibold text-brand-navy">Dirección</h3>
               <address class="mt-1 not-italic text-sm leading-relaxed text-gray-600">
-                {ADDRESS.street}<br />
-                {ADDRESS.building}<br />
-                {ADDRESS.city}, {ADDRESS.country}
+                <a
+                  href={MAPS_OPEN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="transition hover:text-brand-red"
+                >
+                  {ADDRESS.street}<br />
+                  {ADDRESS.building}<br />
+                  {ADDRESS.city}, {ADDRESS.country}
+                </a>
               </address>
             </div>
           </div>
@@ -73,9 +82,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
             <div>
               <h3 class="font-semibold text-brand-navy">WhatsApp Business</h3>
               <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={WHATSAPP_CHAT_URL}
+                data-whatsapp-link
+                data-whatsapp-desktop={WHATSAPP_URL}
                 class="mt-1 text-sm text-gray-600 hover:text-brand-red"
               >
                 +502 4390-5425
@@ -93,7 +102,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicación de SICSA GROUP en Empresarial El Cortijo II, Zona 12"
+            title="Ubicación de SICSA GROUP — Empresarial El Cortijo II, Interior #118"
             class="w-full"
           ></iframe>
         </div>

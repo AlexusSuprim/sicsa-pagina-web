@@ -10,7 +10,7 @@ export interface HeroSlide {
 }
 
 export const HERO_SLIDE_DEFAULT_DURATION_MS = 15_000;
-export const HERO_SLIDE_LEMA_DURATION_MS = 10_000;
+export const HERO_SLIDE_LEMA_DURATION_MS = 14_000;
 
 export const heroSlides: HeroSlide[] = [
   {
@@ -20,7 +20,8 @@ export const heroSlides: HeroSlide[] = [
   },
   {
     title: 'Nuestro Lema',
-    subtitle: 'Consolidarnos como la mejor opción del mercado',
+    subtitle:
+      'Consolidarnos como la mejor opción del mercado, brindando un servicio logístico confiable, eficiente y cercano, que impulse el crecimiento de nuestros clientes.',
     durationMs: HERO_SLIDE_LEMA_DURATION_MS,
   },
   {
@@ -37,6 +38,9 @@ export const CONTACT_EMAIL = 'info@sicsagroup.com.gt';
 export const CONTACT_PHONE = '+502 2420-7999';
 export const CONTACT_PHONE_RAW = '+50224207999';
 export const WHATSAPP_PHONE = '50243905425';
+/** Enlace directo al chat — más fiable en dispositivos móviles */
+export const WHATSAPP_CHAT_URL = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}`;
+/** Atajo wa.me — útil en escritorio */
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_PHONE}`;
 
 export const ADDRESS = {
@@ -47,16 +51,30 @@ export const ADDRESS = {
   full: 'Calzada Atanasio Tzul 22-00, zona 12, Empresarial El Cortijo II, Interior #118, Ciudad de Guatemala',
 };
 
-// Google Maps embed — Empresarial El Cortijo II, Zona 12, Guatemala
-export const MAPS_EMBED_URL =
-  'https://maps.google.com/maps?q=Calzada+Atanasio+Tzul+22-00,+Empresarial+El+Cortijo+II,+Zona+12,+Guatemala&hl=es&z=16&output=embed';
+/** Coordenadas verificadas — Interior #118, Empresarial El Cortijo II */
+export const MAP_LOCATION = {
+  latitude: 14.59364221077347,
+  longitude: -90.54134524232788,
+} as const;
+
+const MAP_QUERY = `${MAP_LOCATION.latitude},${MAP_LOCATION.longitude}`;
+
+/** Embed con pin único en las coordenadas exactas (sin búsqueda por texto) */
+export const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAP_QUERY}&ll=${MAP_QUERY}&z=18&hl=es&output=embed`;
+
+/** Abrir ubicación exacta en Google Maps */
+export const MAPS_OPEN_URL = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
 
 export const SOCIAL_LINKS = {
-  facebook: '#',
-  instagram: '#',
-  twitter: '#',
-  linkedin: '#',
+  facebook: 'https://www.facebook.com/SICSAGroup',
+  instagram: 'https://www.instagram.com/sicsa_group/',
+  linkedin: 'https://www.linkedin.com/company/sicsa-group/',
 } as const;
+
+/** URLs activas para JSON-LD sameAs y componentes de redes sociales */
+export function getActiveSocialUrls(): string[] {
+  return Object.values(SOCIAL_LINKS).filter((url) => url.length > 0);
+}
 
 /**
  * Fuentes de imágenes (licencia libre para uso comercial):

@@ -1,5 +1,6 @@
 ---
 import Button from '@components/ui/Button.astro';
+import SocialLinks from '@components/ui/SocialLinks.astro';
 import { navLinks } from '@data/nav-links';
 ---
 
@@ -10,8 +11,8 @@ import { navLinks } from '@data/nav-links';
   aria-modal="true"
   aria-label="Menú de navegación"
 >
-  <div id="mobile-menu-backdrop" class="absolute inset-0 bg-brand-navy/60 backdrop-blur-sm"></div>
-  <div class="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-white shadow-xl">
+  <div id="mobile-menu-backdrop" class="absolute inset-0 z-0 bg-brand-navy/60 backdrop-blur-sm"></div>
+  <div class="absolute right-0 top-0 z-10 flex h-full w-full max-w-sm flex-col bg-white shadow-xl">
     <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
       <span class="font-display text-lg font-bold text-brand-navy">Menú</span>
       <button
@@ -40,10 +41,13 @@ import { navLinks } from '@data/nav-links';
           ))
         }
       </ul>
-      <div class="mt-8">
+      <div class="mt-8 space-y-4">
         <Button href="#contacto" variant="primary" class="mobile-nav-link w-full">
           Contáctanos
         </Button>
+        <div class="flex justify-center border-t border-gray-100 pt-6">
+          <SocialLinks dark compact />
+        </div>
       </div>
     </nav>
   </div>

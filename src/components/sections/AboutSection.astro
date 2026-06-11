@@ -1,47 +1,100 @@
 ---
-import SectionTitle from '@components/ui/SectionTitle.astro';
 import { Icon } from 'astro-icon/components';
-import { aboutContent } from '@data/services';
+import { quienesSomos, logisticDna } from '@data/about';
+
+const aboutImages = {
+  quienesSomos: '/images/about/quienes-team.jpg',
+  dnaPrimary: '/images/about/dna-shipping.jpg',
+  dnaSecondary: '/images/about/dna-supervision.jpg',
+} as const;
 ---
 
-<section id="nosotros" class="py-16 sm:py-20 lg:py-24">
+<section id="nosotros" class="bg-brand-navy py-16 sm:py-20 lg:py-24">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
-      <div data-aos="fade-right">
-        <SectionTitle
-          eyebrow="¿Quiénes somos?"
-          title="Nuestra identidad"
-          description={aboutContent.identity}
-        />
-        <p class="mt-6 text-base leading-relaxed text-gray-600">{aboutContent.heritage}</p>
+    <!-- Quiénes Somos -->
+    <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div class="space-y-6" data-aos="fade-right">
+        <h2 class="font-display text-3xl font-bold text-brand-gold sm:text-4xl lg:text-5xl">
+          {quienesSomos.title}
+        </h2>
+        {
+          quienesSomos.paragraphs.map((paragraph) => (
+            <p class="text-base leading-relaxed text-white/90 sm:text-lg">{paragraph}</p>
+          ))
+        }
       </div>
+
       <div
-        class="rounded-2xl bg-brand-navy p-8 text-white sm:p-10"
+        class="h-[196px] w-full overflow-hidden rounded-2xl shadow-xl sm:h-[252px] lg:h-[294px] lg:max-w-[70%] lg:justify-self-end"
         data-aos="fade-left"
       >
-        <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-brand-red/20">
-          <Icon name="mdi:dna" class="h-7 w-7 text-brand-red" aria-hidden="true" />
+        <img
+          src={aboutImages.quienesSomos}
+          alt={quienesSomos.imageAlt}
+          width="672"
+          height="448"
+          loading="lazy"
+          decoding="async"
+          class="block h-[226px] w-full -mt-[15px] object-cover object-center sm:h-[282px] lg:h-[324px]"
+        />
+      </div>
+    </div>
+
+    <!-- Nuestro ADN Logístico -->
+    <div
+      class="mt-10 grid grid-cols-1 items-center gap-10 border-t border-white/10 pt-10 lg:mt-12 lg:grid-cols-2 lg:gap-16 lg:pt-12"
+    >
+      <div class="relative order-2 lg:order-1" data-aos="fade-right">
+        <div class="grid grid-cols-1 gap-4 sm:gap-5">
+          <div class="overflow-hidden rounded-2xl shadow-lg">
+            <img
+              src={aboutImages.dnaPrimary}
+              alt={logisticDna.primaryImageAlt}
+              width="960"
+              height="540"
+              loading="lazy"
+              decoding="async"
+              class="aspect-[16/10] w-full object-cover"
+            />
+          </div>
+          <div class="overflow-hidden rounded-2xl shadow-lg sm:max-w-[85%] sm:justify-self-end">
+            <img
+              src={aboutImages.dnaSecondary}
+              alt={logisticDna.secondaryImageAlt}
+              width="820"
+              height="520"
+              loading="lazy"
+              decoding="async"
+              class="aspect-[16/10] w-full object-cover"
+            />
+          </div>
         </div>
-        <h3 class="font-display text-2xl font-bold text-white">Nuestra herencia logística</h3>
-        <p class="mt-4 leading-relaxed text-white/80">
-          Orgullosamente familiares. Lo que comenzó como un legado familiar hoy es una empresa
-          impulsada por tres generaciones que no han dejado de innovar en comercio exterior y
-          logística integral.
-        </p>
-        <ul class="mt-6 space-y-3">
-          <li class="flex items-center gap-3 text-sm text-white/80">
-            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
-            Fundada en abril de 1999
-          </li>
-          <li class="flex items-center gap-3 text-sm text-white/80">
-            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
-            Socios netamente guatemaltecos
-          </li>
-          <li class="flex items-center gap-3 text-sm text-white/80">
-            <Icon name="mdi:check-circle" class="h-5 w-5 text-brand-red" aria-hidden="true" />
-            Seguridad jurídica y operativa
-          </li>
-        </ul>
+        <div
+          class="pointer-events-none absolute left-1/2 top-1/2 z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center sm:h-16 sm:w-16"
+          aria-hidden="true"
+        >
+          <span class="absolute h-full w-5 rounded-sm bg-brand-gold sm:w-6"></span>
+          <span class="absolute h-5 w-full rounded-sm bg-brand-gold sm:h-6"></span>
+        </div>
+      </div>
+
+      <div class="order-1 space-y-6 lg:order-2" data-aos="fade-left">
+        <div class="flex items-start gap-4">
+          <div
+            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-gold/15 ring-1 ring-brand-gold/30"
+            aria-hidden="true"
+          >
+            <Icon name="mdi:dna" class="h-7 w-7 text-brand-gold" />
+          </div>
+          <h2 class="font-display text-3xl font-bold text-brand-gold sm:text-4xl lg:text-5xl">
+            {logisticDna.title}
+          </h2>
+        </div>
+        {
+          logisticDna.paragraphs.map((paragraph) => (
+            <p class="text-base leading-relaxed text-white/90 sm:text-lg">{paragraph}</p>
+          ))
+        }
       </div>
     </div>
   </div>

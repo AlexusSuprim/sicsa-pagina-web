@@ -1,6 +1,7 @@
 ---
 import SectionTitle from '@components/ui/SectionTitle.astro';
 import ServiceCard from '@components/ui/ServiceCard.astro';
+import CourierServicePanel from '@components/ui/CourierServicePanel.astro';
 import { Icon } from 'astro-icon/components';
 import { services } from '@data/services';
 import { multimodalModes } from '@data/company-stats';
@@ -28,6 +29,10 @@ import { multimodalModes } from '@data/company-stats';
 
     <div class="mt-16 space-y-8">
       {services.map((service, index) => <ServiceCard service={service} index={index} />)}
+    </div>
+
+    <div class="mt-8">
+      <CourierServicePanel />
     </div>
   </div>
 </section>

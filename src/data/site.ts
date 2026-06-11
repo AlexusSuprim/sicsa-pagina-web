@@ -83,5 +83,5 @@ export function getActiveSocialUrls(): string[] {
  * - Air: Unsplash (airplane wing)
  * - Truck: Pexels #4483610
  * - Customs: Unsplash (business documents)
- * - Courier: Pexels #4391470 (furgoneta de entrega con paquetes)
+ * - Courier: Pexels #6169668 (recolección y entrega de paquetes)
  */

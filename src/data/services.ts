@@ -89,21 +89,6 @@ export const services: ServiceItem[] = [
       'Optimización de costos al reducir tiempos de estancia',
     ],
   },
-  {
-    id: 'courier',
-    icon: 'mdi:package-variant-closed',
-    logoImage: '/images/Logo_SICSA_COURIER_FINAL.png',
-    title: 'Courier y P.O. Box',
-    description:
-      'Compras en Estados Unidos de forma fácil, rápida y segura. Llevamos sus paquetes hasta la puerta de su hogar u oficina.',
-    image: '/images/services/courier.jpg',
-    features: [
-      'Servicio de casillero (P.O. Box) en EE.UU.',
-      'Entrega a domicilio u oficina',
-      'Recolección en nuestras instalaciones',
-      'Correspondencia y paquetes en tiempo récord',
-    ],
-  },
 ];
 
 export const aboutContent = {

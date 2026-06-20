@@ -2,11 +2,20 @@
 import { Image } from 'astro:assets';
 import Button from '@components/ui/Button.astro';
 import Badge from '@components/ui/Badge.astro';
-import { heroSlides } from '@data/site';
+import type { SiteContent } from '@i18n/types';
+import heroImage from '@/assets/images/hero-background.jpg';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const { hero, ui, nav, seo } = content;
+const heroSlides = hero.slides;
+const servicesHash = nav.find((l) => l.section === 'services')?.hash ?? 'servicios';
+const contactHash = nav.find((l) => l.section === 'contact')?.hash ?? 'contacto';
 
 const slideDurations = heroSlides.map((slide) => slide.durationMs);
-import heroImage from '@/assets/images/hero-logistics.jpg';
-
 const titleClasses =
   'text-3xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl';
 const subtitleClasses =
@@ -15,33 +24,32 @@ const slideCount = heroSlides.length;
 ---
 
 <section
-  id="inicio"
+  data-section="home"
   class="relative flex min-h-[85vh] items-center overflow-hidden bg-brand-navy"
 >
   <Image
     src={heroImage}
-    alt="Contenedores de carga en puerto logístico"
+    alt={seo.ogImageAlt}
     width={1920}
     height={1080}
     format="webp"
     quality={85}
     loading="eager"
-    class="absolute inset-0 h-full w-full object-cover opacity-40"
+    class="absolute inset-0 h-full w-full object-cover object-[center_35%] opacity-45"
   />
-  <div class="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/80 to-brand-navy/50"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-brand-navy/92 via-brand-navy/70 to-brand-navy/35"></div>
 
   <div class="relative mx-auto w-full min-w-0 max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
     <div class="w-full min-w-0 max-w-3xl">
-      <div class="animate-hero flex flex-wrap items-center gap-3">
+      <div class="animate-hero">
         <Badge text="SICSA GROUP" />
-        <span class="text-sm font-medium text-white/70">· SANTAL GROUP</span>
       </div>
 
       <div
         id="hero-carousel"
         class="hero-carousel animate-hero-delay mt-6"
-        aria-roledescription="carrusel"
-        aria-label="Mensajes principales"
+        aria-roledescription="carousel"
+        aria-label={ui.heroCarouselLabel}
         data-slide-count={slideCount}
         data-durations={JSON.stringify(slideDurations)}
       >
@@ -52,8 +60,8 @@ const slideCount = heroSlides.length;
                 <div
                   class="hero-carousel-slide"
                   role="group"
-                  aria-roledescription="diapositiva"
-                  aria-label={`${index + 1} de ${slideCount}`}
+                  aria-roledescription={ui.heroSlideLabel}
+                  aria-label={`${index + 1} / ${slideCount}`}
                   data-slide={index}
                 >
                   {index === 0 ? (
@@ -73,7 +81,7 @@ const slideCount = heroSlides.length;
             id="hero-carousel-dots"
             class="hero-carousel-dots"
             role="tablist"
-            aria-label="Seleccionar mensaje"
+            aria-label={ui.heroDotsLabel}
           >
             {
               heroSlides.map((slide, index) => (
@@ -82,7 +90,7 @@ const slideCount = heroSlides.length;
                   class:list={['hero-carousel-dot', { 'is-active': index === 0 }]}
                   role="tab"
                   aria-selected={index === 0 ? 'true' : 'false'}
-                  aria-label={`${slide.title}`}
+                  aria-label={slide.title}
                   data-slide-to={index}
                 />
               ))
@@ -95,11 +103,11 @@ const slideCount = heroSlides.length;
       </div>
 
       <div class="animate-hero-delay-2 mt-10 flex w-full max-w-full flex-col gap-4 sm:flex-row">
-        <Button href="#servicios" variant="primary" size="lg" class="w-full sm:w-auto">
-          Nuestros servicios
+        <Button href={`#${servicesHash}`} variant="primary" size="lg" class="w-full sm:w-auto">
+          {ui.ourServices}
         </Button>
-        <Button href="#contacto" variant="outline" size="lg" class="w-full sm:w-auto">
-          Contáctanos
+        <Button href={`#${contactHash}`} variant="outline" size="lg" class="w-full sm:w-auto">
+          {ui.contactCta}
         </Button>
       </div>
     </div>

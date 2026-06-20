@@ -1,38 +1,58 @@
-/**
- * Imágenes sección Nosotros en /public/images/about/ (Pexels — licencia libre uso comercial):
- * - quienes-team.jpg — Pexels #8293770
- * - dna-shipping.jpg — Pexels #906494
- * - dna-supervision.jpg — Pexels #4484072
- */
-export interface QuienesSomosContent {
+export interface ValueCard {
+  id: string;
   title: string;
-  paragraphs: string[];
+  description: string;
+  icon: string;
+}
+
+export interface AboutBlock {
+  title: string;
+  highlights: string[];
   imageAlt: string;
 }
 
-export interface LogisticDnaContent {
-  title: string;
-  paragraphs: string[];
-  primaryImageAlt: string;
-  secondaryImageAlt: string;
-}
-
-export const quienesSomos: QuienesSomosContent = {
-  title: 'Quiénes Somos',
-  paragraphs: [
-    'Servicios Integrados de Carga y Logística, S.A. es un operador logístico y agencia aduanal fundado por expertos guatemaltecos en logística aduanera y comercio exterior. Con una trayectoria iniciada en abril de 1999.',
-    'Nos hemos consolidado como líderes en el mercado, adaptándonos a los cambios en procedimientos aduaneros y marcos legales para ofrecer seguridad jurídica y operativa a nuestros clientes.',
+export const quienesSomos: AboutBlock = {
+  title: 'Quiénes somos',
+  highlights: [
+    'Operador logístico y agencia aduanal guatemalteca, fundado en 1999 con más de 25 años de trayectoria.',
+    'Expertos en aduanas que evolucionaron a soluciones integrales: aéreo, marítimo y terrestre en toda la región.',
   ],
-  imageAlt: 'Equipo de profesionales de logística coordinando operaciones en almacén',
+  imageAlt: 'Personal supervisando contenedores y documentación en operación marítima de comercio exterior',
 };
 
-export const logisticDna: LogisticDnaContent = {
-  title: 'Nuestro ADN Logístico',
-  paragraphs: [
-    'Nuestra historia en el comercio exterior no comenzó en una oficina, sino con una herencia de servicio. La pasión por la logística nació con el ejemplo de nuestro abuelo, un Agente Aduanal pionero cuya visión y ética de trabajo sentaron las bases de lo que somos hoy. De él aprendimos que la logística no es solo mover mercancías, sino cumplir promesas.',
-    'Somos, con orgullo, una empresa familiar. Esta naturaleza nos permite una cohesión única: cada miembro de la familia aporta su experiencia técnica y profesional en áreas clave del negocio. Esta convergencia de talentos garantiza una supervisión directa y un compromiso personal que las grandes corporaciones no pueden replicar, haciendo de Sicsa Group una estructura sólida y confiable.',
-    'Nacimos con el servicio de aduanas como nuestra piedra angular. Sin embargo, para responder a un mundo globalizado, evolucionamos. Fuimos sumando capacidades de operador logístico integral, sumando servicios aéreos, marítimos y terrestres para ofrecer una solución completa que simplifica la operación de nuestros aliados.',
+export const logisticDna: AboutBlock = {
+  title: 'Nuestro ADN logístico',
+  highlights: [
+    'Empresa familiar con supervisión directa y compromiso personal en cada operación.',
+    'Herencia de servicio aduanal que hoy se traduce en un operador integral multimodal.',
   ],
-  primaryImageAlt: 'Buque de carga navegando en ruta comercial internacional',
-  secondaryImageAlt: 'Operador de bodega supervisando mercancía almacenada en racks industriales',
+  imageAlt:
+    'Terminal logística con contenedores organizados, reflejando seguridad, puntualidad, eficiencia y compromiso operativo',
 };
+
+export const coreValues: ValueCard[] = [
+  {
+    id: 'security',
+    title: 'Seguridad',
+    description: 'Custodia y monitoreo en cada envío.',
+    icon: 'mdi:shield-check',
+  },
+  {
+    id: 'punctuality',
+    title: 'Puntualidad',
+    description: 'Tiempos cumplidos que nos distinguen.',
+    icon: 'mdi:clock-check',
+  },
+  {
+    id: 'efficiency',
+    title: 'Eficiencia',
+    description: 'Procesos que impulsan su operación.',
+    icon: 'mdi:chart-timeline-variant',
+  },
+  {
+    id: 'commitment',
+    title: 'Compromiso',
+    description: 'Confianza en cada paso del camino.',
+    icon: 'mdi:handshake',
+  },
+];

@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# secret key del formulario (local o servidor — fuera de public_html en producción)
+contact.config.php
+
 # macOS-specific files
 .DS_Store
 

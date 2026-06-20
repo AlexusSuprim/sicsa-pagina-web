@@ -1,64 +1,61 @@
 @import "tailwindcss";
 
-/* Montserrat — cuerpo y navegación (Bunny Fonts, SIL Open Font License) */
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-SemiBold.woff2') format('woff2');
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/fonts/Montserrat-Bold.woff2') format('woff2');
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-/*
- * Gilroy — títulos y display (fuente comercial)
- * Descomentar y colocar archivos .woff2 en /public/fonts/ cuando estén disponibles:
- *
- * @font-face {
- *   font-family: 'Gilroy';
- *   src: url('/fonts/Gilroy-Bold.woff2') format('woff2');
- *   font-weight: 700;
- *   font-style: normal;
- *   font-display: swap;
- * }
- */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/fonts/SourceSans3-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/fonts/SourceSans3-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
-  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Gilroy', 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-navy: #1b2b48;
-  --color-brand-navy-light: #2a3f63;
-  --color-brand-navy-50: #f0f3f8;
-  --color-brand-navy-100: #dce3ef;
-  --color-brand-red: #d12027;
-  --color-brand-red-dark: #a8181e;
+  --color-brand-navy: #0c1526;
+  --color-brand-navy-light: #1a2d4a;
+  --color-brand-navy-50: #eef1f6;
+  --color-brand-navy-100: #d5dce8;
+  --color-brand-red: #e0232a;
+  --color-brand-red-dark: #b81c22;
   --color-brand-blue: #2b6cb0;
   --color-brand-blue-light: #4a90d9;
-  --color-brand-gold: #c59d33;
+  --color-brand-gold: #4a6280;
+  --color-brand-steel: #4a6280;
+  --color-brand-surface: #f4f6f9;
+  --color-brand-surface-elevated: #ffffff;
 }
 
 @layer base {
@@ -103,6 +100,26 @@
   }
 }
 
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+.route-signature {
+  background-image:
+    linear-gradient(135deg, transparent 46%, rgb(224 35 42 / 0.08) 46%, rgb(224 35 42 / 0.08) 48%, transparent 48%),
+    radial-gradient(circle at 20% 80%, rgb(26 45 74 / 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgb(224 35 42 / 0.06) 0%, transparent 45%);
+}
+
+.service-card-elevated {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card-elevated:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -12px rgb(12 21 38 / 0.22);
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -126,8 +143,23 @@
   animation: fadeIn 0.7s ease-out 0.4s both;
 }
 
-/* Fallback: evitar secciones en blanco si AOS no inicializa */
 body:not(.aos-init) [data-aos] {
   opacity: 1 !important;
   transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card-elevated {
+    transition: none;
+  }
+
+  .service-card-elevated:hover {
+    transform: none;
+  }
+
+  .animate-hero,
+  .animate-hero-delay,
+  .animate-hero-delay-2 {
+    animation: none;
+  }
 }

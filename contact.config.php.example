@@ -1,0 +1,21 @@
+<?php
+/**
+ * Configuración del formulario de contacto — NO subir al repositorio.
+ *
+ * Namecheap / cPanel — ubicación recomendada (FUERA de public_html):
+ *
+ *   /home/tu_usuario/
+ *   ├── contact.config.php      ← crear aquí (este archivo)
+ *   └── public_html/
+ *       ├── contact.php
+ *       └── index.html
+ *
+ * 1. Copiar este archivo como contact.config.php en /home/tu_usuario/
+ * 2. Pegar la Secret Key de Cloudflare Turnstile (no la Site Key)
+ * 3. NO subir contact.config.php dentro de public_html/
+ *
+ * Obtener claves: https://dash.cloudflare.com/?to=/:account/turnstile
+ */
+return [
+    'turnstile_secret_key' => 'your_turnstile_secret_key_here',
+];

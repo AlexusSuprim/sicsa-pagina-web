@@ -1,0 +1,96 @@
+---
+import type { Locale } from '@i18n/types';
+import { LOCALE_LABELS } from '@i18n/config';
+import { getAlternateLocale, getLocalePath } from '@i18n/paths';
+import { getContent } from '@i18n/get-content';
+
+interface Props {
+  locale: Locale;
+  variant?: 'header' | 'menu';
+}
+
+const { locale, variant = 'header' } = Astro.props;
+const alternate = getAlternateLocale(locale);
+const ui = getContent(locale).ui;
+const isMenu = variant === 'menu';
+
+const baseClass =
+  'language-toggle inline-flex items-center rounded-lg border border-gray-200 bg-white p-0.5 text-xs font-semibold text-brand-navy';
+const linkClass =
+  'language-toggle-link inline-flex min-h-10 min-w-[2.75rem] items-center justify-center rounded-md px-2.5 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red';
+const activeClass = 'bg-brand-navy-50 text-brand-red shadow-sm';
+const inactiveClass = 'text-brand-navy hover:bg-brand-navy-50/60';
+---
+
+<div
+  class:list={[baseClass, isMenu && 'w-full justify-center']}
+  role="group"
+  aria-label={ui.languageLabel}
+  data-language-toggle
+  data-current-locale={locale}
+  data-alternate-path={getLocalePath(alternate)}
+>
+  {
+    (['es', 'en'] as Locale[]).map((code) => (
+      <a
+        href={getLocalePath(code)}
+        class:list={[linkClass, code === locale ? activeClass : inactiveClass, isMenu && 'flex-1']}
+        aria-current={code === locale ? 'true' : undefined}
+        aria-label={code === 'es' ? ui.languageEs : ui.languageEn}
+        data-locale-link={code}
+      >
+        {LOCALE_LABELS[code]}
+      </a>
+    ))
+  }
+</div>
+
+<script>
+  function initLanguageToggle() {
+    document.querySelectorAll('[data-language-toggle]').forEach((group) => {
+      if (group.getAttribute('data-toggle-ready') === 'true') return;
+      group.setAttribute('data-toggle-ready', 'true');
+
+      const currentLocale = group.getAttribute('data-current-locale') ?? 'es';
+      const hashMapEsToEn: Record<string, string> = {
+        inicio: 'home',
+        nosotros: 'about',
+        servicios: 'services',
+        contacto: 'contact',
+      };
+      const hashMapEnToEs: Record<string, string> = {
+        home: 'inicio',
+        about: 'nosotros',
+        services: 'servicios',
+        contact: 'contacto',
+      };
+
+      group.querySelectorAll('[data-locale-link]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const target = link.getAttribute('data-locale-link');
+          if (!target || target === currentLocale) return;
+
+          const rawHash = window.location.hash.replace(/^#/, '');
+          if (!rawHash) return;
+
+          const mapped =
+            currentLocale === 'es'
+              ? hashMapEsToEn[rawHash]
+              : hashMapEnToEs[rawHash];
+
+          if (mapped) {
+            event.preventDefault();
+            const href = link.getAttribute('href') ?? '/';
+            window.location.assign(`${href}#${mapped}`);
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLanguageToggle);
+  } else {
+    initLanguageToggle();
+  }
+</script>

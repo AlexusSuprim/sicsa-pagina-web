@@ -4,13 +4,17 @@ import { SOCIAL_LINKS } from '@data/site';
 
 interface Props {
   light?: boolean;
-  /** Iconos oscuros para fondos claros (encabezado) */
   dark?: boolean;
-  /** Tamaño reducido para el encabezado */
   compact?: boolean;
+  followPrefix?: string;
 }
 
-const { light = false, dark = false, compact = false } = Astro.props;
+const {
+  light = false,
+  dark = false,
+  compact = false,
+  followPrefix = 'Follow us on',
+} = Astro.props;
 
 const linkClass = light
   ? 'text-white/70 hover:text-white'
@@ -47,7 +51,7 @@ const socialItems: SocialItem[] = [
           buttonClass,
           linkClass,
         ]}
-        aria-label={`Síguenos en ${item.name}`}
+        aria-label={`${followPrefix} ${item.name}`}
         target="_blank"
         rel="noopener noreferrer"
       >

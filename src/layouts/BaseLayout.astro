@@ -5,6 +5,9 @@ import Header from '@components/layout/Header.astro';
 import MobileMenu from '@components/layout/MobileMenu.astro';
 import Footer from '@components/layout/Footer.astro';
 import WhatsAppButton from '@components/layout/WhatsAppButton.astro';
+import type { Locale } from '@i18n/types';
+import { getContent } from '@i18n/get-content';
+import { getLocaleUrl } from '@i18n/paths';
 import {
   SITE_NAME,
   SITE_URL,
@@ -12,69 +15,141 @@ import {
   CONTACT_PHONE,
   ADDRESS,
   MAP_LOCATION,
+  MAPS_OPEN_URL,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
   getActiveSocialUrls,
 } from '@data/site';
 
 interface Props {
+  locale: Locale;
   title: string;
   description: string;
   image?: string;
   canonicalUrl?: string;
+  noindex?: boolean;
 }
 
 const {
+  locale,
   title,
   description,
   image = '/images/og-default.jpg',
-  canonicalUrl = Astro.url.href,
+  canonicalUrl: canonicalUrlProp,
+  noindex = false,
 } = Astro.props;
+
+const content = getContent(locale);
+const { seo, ui } = content;
 
 const fullTitle = `${title} | ${SITE_NAME}`;
 const ogImage = new URL(image, SITE_URL).href;
+const logoUrl = new URL('/images/SICSA%20GROUP%20FINAL_FINAL.png', SITE_URL).href;
+
+const canonicalUrl = canonicalUrlProp ?? getLocaleUrl(locale);
+const alternateEsUrl = getLocaleUrl('es');
+const alternateEnUrl = getLocaleUrl('en');
+
+const htmlLang = locale === 'en' ? 'en' : 'es';
+const inLanguage = locale === 'en' ? 'en-US' : 'es-GT';
+const areaServedEn = locale === 'en' ? 'Central America' : 'Centroamérica';
+
+const robotsContent = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION ?? '';
+
+const organizationId = `${SITE_URL}/#organization`;
+const websiteId = `${SITE_URL}/#website`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: SITE_NAME,
-  description,
-  url: SITE_URL,
-  email: CONTACT_EMAIL,
-  telephone: CONTACT_PHONE,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: `${ADDRESS.street}, ${ADDRESS.building}`,
-    addressLocality: ADDRESS.city,
-    addressCountry: 'GT',
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: MAP_LOCATION.latitude,
-    longitude: MAP_LOCATION.longitude,
-  },
-  sameAs: getActiveSocialUrls(),
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: SITE_URL,
+      name: SITE_NAME,
+      description,
+      inLanguage,
+      publisher: { '@id': organizationId },
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': organizationId,
+      name: SITE_NAME,
+      legalName: seo.organizationLegalName,
+      description,
+      url: SITE_URL,
+      image: ogImage,
+      logo: { '@type': 'ImageObject', url: logoUrl },
+      email: CONTACT_EMAIL,
+      telephone: CONTACT_PHONE,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: `${ADDRESS.street}, ${ADDRESS.building}`,
+        addressLocality: ADDRESS.city,
+        addressRegion: 'Guatemala',
+        addressCountry: 'GT',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: MAP_LOCATION.latitude,
+        longitude: MAP_LOCATION.longitude,
+      },
+      hasMap: MAPS_OPEN_URL,
+      areaServed: [
+        { '@type': 'Country', name: 'Guatemala' },
+        { '@type': 'Place', name: areaServedEn },
+      ],
+      sameAs: getActiveSocialUrls(),
+    },
+  ],
 };
+
+const anchorSections = content.nav
+  .filter((link) => link.section !== 'contact')
+  .map((link) => ({ section: link.section, hash: link.hash }));
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={seo.keywords} />
+    <meta name="author" content={SITE_NAME} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="theme-color" content="#0c1526" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="es-GT" href={alternateEsUrl} />
+    <link rel="alternate" hreflang="en" href={alternateEnUrl} />
+    <link rel="alternate" hreflang="x-default" href={alternateEsUrl} />
+
+    {
+      googleSiteVerification && (
+        <meta name="google-site-verification" content={googleSiteVerification} />
+      )
+    }
 
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={seo.ogImageAlt} />
+    <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:locale" content="es_GT" />
+    <meta property="og:locale" content={seo.ogLocale} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={seo.ogImageAlt} />
 
     <title>{fullTitle}</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -87,59 +162,131 @@ const jsonLd = {
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-red focus:px-4 focus:py-2 focus:text-white"
     >
-      Saltar al contenido
+      {ui.skipLink}
     </a>
 
-    <Header />
-    <MobileMenu />
+    <Header locale={locale} content={content} />
+    <MobileMenu locale={locale} content={content} />
     <main id="main-content">
       <slot />
     </main>
-    <Footer />
-    <WhatsAppButton />
+    <Footer locale={locale} content={content} />
+    <WhatsAppButton ariaLabel={ui.whatsappAria} />
+
+    <script is:inline define:vars={{ anchorSections, contactHash: content.nav.find((l) => l.section === 'contact')?.hash ?? 'contacto' }}>
+      (function () {
+        var allAnchors = anchorSections.map(function (a) { return a.hash; }).concat([contactHash]);
+        var MOBILE_UA_PATTERN =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+
+        function resolveAnchorTarget(hash) {
+          if (hash === contactHash) {
+            return document.getElementById(contactHash);
+          }
+          var section = anchorSections.find(function (a) { return a.hash === hash; });
+          if (!section) return null;
+          return document.querySelector('[data-section="' + section.section + '"]');
+        }
+
+        function syncAnchorIds() {
+          anchorSections.forEach(function (item) {
+            Array.prototype.slice
+              .call(document.querySelectorAll('[data-section="' + item.section + '"]'))
+              .forEach(function (el) {
+                el.removeAttribute('id');
+              });
+            var active = document.querySelector('[data-section="' + item.section + '"]');
+            if (active) active.id = item.hash;
+          });
+
+          var contactEl = document.getElementById(contactHash) ||
+            document.querySelector('[data-section="contact"]');
+          if (contactEl) contactEl.id = contactHash;
+        }
+
+        function closeMobileMenu() {
+          var menu = document.getElementById('mobile-menu');
+          var openBtn = document.getElementById('mobile-menu-open');
+          if (!menu || menu.classList.contains('hidden')) return;
+          menu.classList.add('hidden');
+          if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        }
+
+        function scrollToAnchor(hash, behavior) {
+          var target = resolveAnchorTarget(hash);
+          if (!target) return false;
+          target.scrollIntoView({ behavior: behavior || 'smooth', block: 'start' });
+          if (window.history.replaceState) {
+            window.history.replaceState(null, '', '#' + hash);
+          } else {
+            window.location.hash = hash;
+          }
+          return true;
+        }
+
+        function handleAnchorClick(event) {
+          var link = event.target.closest('a[href^="#"]');
+          if (!link) return;
+          var href = link.getAttribute('href');
+          if (!href || href.length < 2) return;
+          var hash = href.slice(1);
+          if (allAnchors.indexOf(hash) === -1) return;
+          if (!resolveAnchorTarget(hash)) return;
+          event.preventDefault();
+          scrollToAnchor(hash, 'smooth');
+          closeMobileMenu();
+        }
+
+        function initWhatsAppLinks() {
+          var links = document.querySelectorAll('[data-whatsapp-link]');
+          var isMobile = MOBILE_UA_PATTERN.test(navigator.userAgent);
+          links.forEach(function (link) {
+            var chatUrl = link.getAttribute('href');
+            if (!chatUrl) return;
+            if (!isMobile) {
+              link.setAttribute('target', '_blank');
+              link.setAttribute('rel', 'noopener noreferrer');
+              return;
+            }
+            link.removeAttribute('target');
+            link.removeAttribute('rel');
+            link.addEventListener('click', function (event) {
+              event.preventDefault();
+              window.location.assign(chatUrl);
+            }, { passive: false });
+          });
+        }
+
+        function initAnchors() {
+          syncAnchorIds();
+          document.addEventListener('click', handleAnchorClick);
+          if (window.location.hash) {
+            var hash = window.location.hash.slice(1);
+            if (allAnchors.indexOf(hash) !== -1) {
+              window.requestAnimationFrame(function () {
+                scrollToAnchor(hash, 'auto');
+              });
+            }
+          }
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function () {
+            initAnchors();
+            initWhatsAppLinks();
+          });
+        } else {
+          initAnchors();
+          initWhatsAppLinks();
+        }
+      })();
+    </script>
 
     <script>
       import AOS from 'aos';
 
-      const MOBILE_UA_PATTERN =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-
-      function initWhatsAppLinks(): void {
-        const links = document.querySelectorAll<HTMLAnchorElement>('[data-whatsapp-link]');
-        const isMobile = MOBILE_UA_PATTERN.test(navigator.userAgent);
-
-        links.forEach((link) => {
-          if (isMobile) {
-            link.removeAttribute('target');
-            link.removeAttribute('rel');
-          } else {
-            const desktopHref = link.dataset.whatsappDesktop;
-            if (desktopHref) {
-              link.href = desktopHref;
-            }
-            link.setAttribute('target', '_blank');
-            link.setAttribute('rel', 'noopener noreferrer');
-          }
-
-          let isNavigating = false;
-          link.addEventListener(
-            'click',
-            (event) => {
-              if (isNavigating) {
-                event.preventDefault();
-                return;
-              }
-              isNavigating = true;
-              window.setTimeout(() => {
-                isNavigating = false;
-              }, 3000);
-            },
-            { passive: false }
-          );
-        });
-      }
-
-      function initAos(): void {
+      function initAos() {
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         AOS.init({
           duration: 600,
@@ -150,15 +297,10 @@ const jsonLd = {
         });
       }
 
-      function initPageScripts(): void {
-        initWhatsAppLinks();
-        initAos();
-      }
-
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initPageScripts);
+        document.addEventListener('DOMContentLoaded', initAos);
       } else {
-        initPageScripts();
+        initAos();
       }
     </script>
   </body>

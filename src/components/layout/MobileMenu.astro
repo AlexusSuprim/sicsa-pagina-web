@@ -1,7 +1,17 @@
 ---
 import Button from '@components/ui/Button.astro';
 import SocialLinks from '@components/ui/SocialLinks.astro';
-import { navLinks } from '@data/nav-links';
+import Nav from '@components/layout/Nav.astro';
+import type { Locale, SiteContent } from '@i18n/types';
+
+interface Props {
+  locale: Locale;
+  content: SiteContent;
+}
+
+const { locale, content } = Astro.props;
+const { ui, nav } = content;
+const contactHash = nav.find((l) => l.section === 'contact')?.hash ?? 'contacto';
 ---
 
 <div
@@ -9,44 +19,35 @@ import { navLinks } from '@data/nav-links';
   class="fixed inset-0 z-50 hidden lg:hidden"
   role="dialog"
   aria-modal="true"
-  aria-label="Menú de navegación"
+  aria-label={ui.mobileMenuAria}
 >
   <div id="mobile-menu-backdrop" class="absolute inset-0 z-0 bg-brand-navy/60 backdrop-blur-sm"></div>
   <div class="absolute right-0 top-0 z-10 flex h-full w-full max-w-sm flex-col bg-white shadow-xl">
     <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-      <span class="font-display text-lg font-bold text-brand-navy">Menú</span>
+      <span class="font-display text-lg font-bold text-brand-navy">{ui.mobileMenuTitle}</span>
       <button
         id="mobile-menu-close"
         type="button"
         class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-navy hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red"
-        aria-label="Cerrar menú"
+        aria-label={ui.closeMenuAria}
       >
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
-    <nav class="flex-1 overflow-y-auto px-6 py-6" aria-label="Navegación móvil">
-      <ul class="space-y-2">
-        {
-          navLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="mobile-nav-link block rounded-lg px-4 py-3 text-base font-medium text-brand-navy hover:bg-brand-navy-50 hover:text-brand-red"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+    <nav class="flex-1 overflow-y-auto px-6 py-6" aria-label={ui.mobileNavAria}>
+      <Nav
+        links={nav}
+        listClass="space-y-2"
+        itemClass="mobile-nav-link block rounded-lg px-4 py-3 text-base font-medium text-brand-navy hover:bg-brand-navy-50 hover:text-brand-red"
+      />
       <div class="mt-8 space-y-4">
-        <Button href="#contacto" variant="primary" class="mobile-nav-link w-full">
-          Contáctanos
+        <Button href={`#${contactHash}`} variant="primary" class="mobile-nav-link w-full">
+          {ui.contactCta}
         </Button>
         <div class="flex justify-center border-t border-gray-100 pt-6">
-          <SocialLinks dark compact />
+          <SocialLinks dark compact followPrefix={ui.socialFollowPrefix} />
         </div>
       </div>
     </nav>

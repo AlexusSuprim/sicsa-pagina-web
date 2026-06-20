@@ -1,13 +1,20 @@
 ---
-import { WHATSAPP_CHAT_URL, WHATSAPP_URL } from '@data/site';
+import { WHATSAPP_CHAT_URL } from '@data/site';
+
+interface Props {
+  ariaLabel: string;
+}
+
+const { ariaLabel } = Astro.props;
 ---
 
 <a
   href={WHATSAPP_CHAT_URL}
   data-whatsapp-link
-  data-whatsapp-desktop={WHATSAPP_URL}
+  target="_blank"
+  rel="noopener noreferrer"
   class="fixed bottom-6 right-6 z-50 inline-flex h-14 w-14 touch-manipulation items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
-  aria-label="Contactar por WhatsApp Business"
+  aria-label={ariaLabel}
 >
   <svg class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path

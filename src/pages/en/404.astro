@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import { getContent } from '@i18n/get-content';
+import { getLocaleUrl } from '@i18n/paths';
+
+const content = getContent('en');
+const { ui } = content;
+---
+
+<BaseLayout
+  locale="en"
+  title={ui.notFoundTitle}
+  description={ui.notFoundDescription}
+  canonicalUrl={`${getLocaleUrl('en')}404/`}
+  noindex
+>
+  <section class="flex min-h-[60vh] items-center py-24">
+    <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+      <p class="text-sm font-semibold uppercase tracking-widest text-brand-red">{ui.notFoundEyebrow}</p>
+      <h1 class="mt-4 text-4xl font-bold text-brand-navy sm:text-5xl">{ui.notFoundTitle}</h1>
+      <p class="mx-auto mt-4 max-w-md text-gray-600">{ui.notFoundDescription}</p>
+      <div class="mt-8">
+        <Button href="/en/" variant="primary" size="lg">
+          {ui.notFoundCta}
+        </Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

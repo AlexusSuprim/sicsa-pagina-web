@@ -2,19 +2,36 @@
 import Nav from '@components/layout/Nav.astro';
 import Button from '@components/ui/Button.astro';
 import SocialLinks from '@components/ui/SocialLinks.astro';
+import LanguageToggle from '@components/layout/LanguageToggle.astro';
+import type { Locale, SiteContent } from '@i18n/types';
+
+interface Props {
+  locale: Locale;
+  content: SiteContent;
+}
+
+const { locale, content } = Astro.props;
+const { ui, nav } = content;
+const homeHash = nav.find((l) => l.section === 'home')?.hash ?? 'inicio';
+const contactHash = nav.find((l) => l.section === 'contact')?.hash ?? 'contacto';
 ---
 
 <header
   role="banner"
   class="sticky top-0 z-40 border-b border-gray-100 bg-white/95 backdrop-blur-md"
 >
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-    <a href="#inicio" class="flex min-w-0 shrink items-center gap-2 sm:gap-4" aria-label="SICSA GROUP - Inicio">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between gap-2 py-3 sm:gap-4">
+    <a
+      href={`#${homeHash}`}
+      class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden sm:gap-4 lg:flex-none"
+      aria-label={ui.headerHomeAria}
+    >
       <img
         src="/images/SICSA%20GROUP%20FINAL_FINAL.png"
-        alt="SICSA GROUP — Logística integral"
-        width="225"
-        height="65"
+        alt={ui.headerLogoAlt}
+        width="2782"
+        height="1083"
         class="my-[15px] h-11 w-auto shrink-0 sm:h-[3.75rem]"
         loading="eager"
         decoding="async"
@@ -23,23 +40,26 @@ import SocialLinks from '@components/ui/SocialLinks.astro';
       <img
         src="/images/Logo%20Santal%20Group_ORIGINAL_1.png"
         alt="SANTAL GROUP"
-        width="150"
-        height="50"
-        class="h-7 w-auto shrink-0 sm:h-10"
+        width="3000"
+        height="931"
+        class="my-[15px] h-11 w-auto shrink-0 sm:h-[3.75rem]"
         loading="eager"
         decoding="async"
       />
     </a>
 
-    <nav class="hidden lg:block" aria-label="Navegación principal">
-      <Nav />
+    <nav class="hidden lg:block" aria-label={ui.mainNavAria}>
+      <Nav links={nav} />
     </nav>
 
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+      <div class="hidden lg:block">
+        <LanguageToggle locale={locale} variant="header" />
+      </div>
       <div class="hidden items-center gap-2 sm:flex md:gap-3">
-        <SocialLinks dark compact />
-        <Button href="#contacto" variant="primary" size="sm">
-          Contáctanos
+        <SocialLinks dark compact followPrefix={ui.socialFollowPrefix} />
+        <Button href={`#${contactHash}`} variant="primary" size="sm">
+          {ui.contactCta}
         </Button>
       </div>
       <button
@@ -48,12 +68,21 @@ import SocialLinks from '@components/ui/SocialLinks.astro';
         class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-navy hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red lg:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
-        aria-label="Abrir menú"
+        aria-label={ui.openMenuAria}
       >
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
+    </div>
+    </div>
+
+    <!-- Móvil: fila dedicada para no solapar los logotipos -->
+    <div
+      class="flex items-center justify-end border-t border-gray-100 py-2 lg:hidden"
+      aria-label={ui.languageLabel}
+    >
+      <LanguageToggle locale={locale} variant="header" />
     </div>
   </div>
 </header>

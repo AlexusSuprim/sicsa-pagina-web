@@ -1,0 +1,35 @@
+---
+import type { Locale } from '@i18n/types';
+import { getContent } from '@i18n/get-content';
+import { getLocaleUrl } from '@i18n/paths';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import HeroSection from '@components/sections/HeroSection.astro';
+import IntroSection from '@components/sections/IntroSection.astro';
+import AboutSection from '@components/sections/AboutSection.astro';
+import FleetSection from '@components/sections/FleetSection.astro';
+import ServicesSection from '@components/sections/ServicesSection.astro';
+import ContactSection from '@components/sections/ContactSection.astro';
+import { OG_IMAGE } from '@data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const content = getContent(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={content.seo.title}
+  description={content.seo.description}
+  image={OG_IMAGE}
+  canonicalUrl={getLocaleUrl(locale)}
+>
+  <HeroSection content={content} />
+  <IntroSection content={content} />
+  <AboutSection content={content} />
+  <FleetSection content={content} />
+  <ServicesSection content={content} />
+  <ContactSection content={content} locale={locale} />
+</BaseLayout>

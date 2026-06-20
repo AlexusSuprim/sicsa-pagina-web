@@ -9,6 +9,18 @@ export interface ServiceItem {
   features: string[];
 }
 
+export interface DisplayServiceItem extends ServiceItem {
+  imageKey: string;
+  tagline: string;
+}
+
+export interface FleetUnit {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
 export const services: ServiceItem[] = [
   {
     id: 'maritime',
@@ -64,7 +76,7 @@ export const services: ServiceItem[] = [
     title: 'Logística Aduanal',
     description:
       'Nuestra fortaleza en nacionalización le asegura cumplir con cada normativa de la SAT, eliminando riesgos y agilizando sus tiempos de entrega.',
-    image: '/images/services/customs.jpg',
+    image: '/images/servicio_aduanal.png',
     features: [
       'Asesoría en costos, tiempos y regímenes aduaneros',
       'Clasificación arancelaria de mercancías',
@@ -76,12 +88,12 @@ export const services: ServiceItem[] = [
   {
     id: 'warehousing',
     icon: 'mdi:warehouse',
-    title: 'Bodegaje',
+    title: 'Almacenaje',
     description:
-      'Soluciones de bodegaje estratégico diseñadas para adaptarse a sus picos de demanda y temporadas altas, con el espacio y la infraestructura necesarios para el resguardo seguro de una amplia gama de productos.',
-    image: '/images/services/truck.jpg',
+      'Soluciones de almacenaje estratégico diseñadas para adaptarse a sus picos de demanda y temporadas altas, con el espacio y la infraestructura necesarios para el resguardo seguro de una amplia gama de productos.',
+    image: '/images/servicio_almacenaje.png',
     features: [
-      'Bodegaje estratégico para picos de demanda y temporadas altas',
+      'Almacenaje estratégico para picos de demanda y temporadas altas',
       'Integración con aduanas y transporte: consolidación, resguardo y despacho',
       'Maniobras de carga y descarga con equipo especializado',
       'Personal entrenado para el manejo de productos delicados',
@@ -91,21 +103,67 @@ export const services: ServiceItem[] = [
   },
 ];
 
-export const aboutContent = {
-  intro:
-    'Servicios Integrados Cargo es una empresa experta en logística, con años de experiencia en consolidación y desconsolidación de carga aérea, marítima y terrestre. Contamos con transporte terrestre propio y logística aduanal integral.',
-  identity:
-    'Somos una empresa guatemalteca fundada en 1999. Nos apasiona ser el operador logístico y la agencia aduanal que brinda seguridad jurídica y operativa a cada uno de nuestros clientes.',
-  roots:
-    'Servicios Integrados de Carga y Logística, S.A. fue fundada en abril de 1999 por socios netamente guatemaltecos, expertos en logística aduanera y comercio internacional. Más de 25 años de experiencia nos han convertido en referentes en servicios logísticos en la región.',
-  team:
-    'Estamos conformados por un equipo multidisciplinario de agentes aduaneros, agentes de carga, gestores de importación y exportación, operadores y transportistas, comprometidos con proveer un servicio ético y profesional con los más altos estándares de calidad.',
-  consulting:
-    'Ofrecemos un diferencial en consultoría para ayudarle a tomar las mejores decisiones en logística. Nos adaptamos al mercado y al entorno de nuestros clientes, innovando y liderando la industria.',
-  heritage:
-    'Llevamos la logística en la sangre. Heredamos la ética y visión de nuestro abuelo, un agente aduanal pionero en la región. Hoy combinamos esa tradición familiar con profesionalismo técnico para supervisar cada detalle de la carga que se nos confía.',
-  evolution:
-    'Nacimos expertos en aduanas y evolucionamos contigo. Hoy somos un operador integral que domina el transporte aéreo, marítimo y terrestre en toda la región, con un ecosistema logístico que incluye mensajería, carga marítima, aérea y flota propia.',
-  philosophy:
-    'Durante más de 25 años hemos transformado la logística en soluciones eficientes, proporcionando certeza y continuidad a nuestros clientes con precisión, responsabilidad y acompañamiento en cada operación.',
+const displayCopy: Record<string, { tagline: string; description: string; imageKey: string }> = {
+  maritime: {
+    tagline: 'Conexiones globales',
+    description: 'Alianzas con navieras y agentes internacionales para mover su carga a cualquier destino.',
+    imageKey: 'maritime',
+  },
+  air: {
+    tagline: 'Velocidad sin fronteras',
+    description: 'Carga aérea urgente con líneas que conectan Guatemala con el mundo.',
+    imageKey: 'air',
+  },
+  land: {
+    tagline: 'México → Centroamérica',
+    description: 'Desde un pallet hasta un furgón completo, con flota propia y GPS satelital.',
+    imageKey: 'land',
+  },
+  customs: {
+    tagline: 'Nuestra fortaleza',
+    description: 'Asesoría aduanal integral: clasificación, documentación y cumplimiento SAT.',
+    imageKey: 'customs',
+  },
+  warehousing: {
+    tagline: 'Almacenaje estratégico',
+    description: 'Resguardo, inventario y distribución para hacer crecer su negocio.',
+    imageKey: 'warehousing',
+  },
 };
+
+export const displayServices: DisplayServiceItem[] = services.map((service) => {
+  const copy = displayCopy[service.id];
+  return {
+    ...service,
+    tagline: copy?.tagline ?? service.title,
+    description: copy?.description ?? service.description,
+    imageKey: copy?.imageKey ?? service.id,
+  };
+});
+
+export const fleetUnits: FleetUnit[] = [
+  {
+    id: 'trailers',
+    title: 'Furgones 53 pies',
+    description: 'Capacidad ideal para cargas de gran volumen.',
+    icon: 'mdi:truck-trailer',
+  },
+  {
+    id: 'medium',
+    title: 'Camiones 10 toneladas',
+    description: 'Solución eficiente para cargas medianas.',
+    icon: 'mdi:truck',
+  },
+  {
+    id: 'light',
+    title: 'Camiones 5 toneladas',
+    description: 'Ideal para cargas ligeras y reparto.',
+    icon: 'mdi:truck-fast',
+  },
+  {
+    id: 'chassis',
+    title: 'Chasis 40 pies',
+    description: 'Movimiento seguro de contenedores desde puerto.',
+    icon: 'mdi:crane',
+  },
+];

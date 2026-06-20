@@ -1,23 +1,28 @@
 ---
-import { navLinks } from '@data/nav-links';
+import type { NavLinkContent } from '@i18n/types';
 
 interface Props {
+  links: NavLinkContent[];
   class?: string;
+  listClass?: string;
+  itemClass?: string;
   onLinkClick?: string;
 }
 
-const { class: className = '', onLinkClick } = Astro.props;
+const {
+  links,
+  class: className = '',
+  listClass = 'flex items-center gap-1',
+  itemClass = 'rounded-lg px-4 py-2 text-sm font-medium text-brand-navy transition hover:bg-brand-navy-50 hover:text-brand-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red',
+  onLinkClick,
+} = Astro.props;
 ---
 
-<ul class={`flex items-center gap-1 ${className}`}>
+<ul class:list={[listClass, className]}>
   {
-    navLinks.map((link) => (
+    links.map((link) => (
       <li>
-        <a
-          href={link.href}
-          class="rounded-lg px-4 py-2 text-sm font-medium text-brand-navy transition hover:bg-brand-navy-50 hover:text-brand-red focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red"
-          onclick={onLinkClick}
-        >
+        <a href={`#${link.hash}`} class={itemClass} onclick={onLinkClick}>
           {link.label}
         </a>
       </li>

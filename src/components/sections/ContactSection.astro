@@ -2,6 +2,7 @@
 import SectionTitle from '@components/ui/SectionTitle.astro';
 import Button from '@components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
+import type { Locale, SiteContent } from '@i18n/types';
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE,
@@ -9,18 +10,26 @@ import {
   MAPS_EMBED_URL,
   MAPS_OPEN_URL,
   WHATSAPP_CHAT_URL,
-  WHATSAPP_URL,
+  WHATSAPP_DISPLAY,
 } from '@data/site';
 
+interface Props {
+  content: SiteContent;
+  locale: Locale;
+}
+
+const { content, locale } = Astro.props;
+const contact = content.ui.contact;
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+const isTurnstileEnabled = turnstileSiteKey.length > 0;
 ---
 
-<section id="contacto" class="bg-brand-navy-50 py-16 sm:py-20 lg:py-24">
+<section data-section="contact" class="bg-brand-navy-50 py-16 sm:py-20 lg:py-24">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <SectionTitle
-      eyebrow="Contacto"
-      title="Estamos listos para atenderle"
-      description="Cuéntenos sobre su operación logística y nuestro equipo le responderá a la brevedad."
+      eyebrow={contact.eyebrow}
+      title={contact.title}
+      description={contact.description}
       align="center"
     />
 
@@ -32,7 +41,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               <Icon name="mdi:map-marker" class="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 class="font-semibold text-brand-navy">Dirección</h3>
+              <h3 class="font-semibold text-brand-navy">{contact.addressLabel}</h3>
               <address class="mt-1 not-italic text-sm leading-relaxed text-gray-600">
                 <a
                   href={MAPS_OPEN_URL}
@@ -53,7 +62,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               <Icon name="mdi:phone" class="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 class="font-semibold text-brand-navy">Teléfono PBX</h3>
+              <h3 class="font-semibold text-brand-navy">{contact.phoneLabel}</h3>
               <a
                 href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`}
                 class="mt-1 text-sm text-gray-600 hover:text-brand-red"
@@ -68,7 +77,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               <Icon name="mdi:email" class="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 class="font-semibold text-brand-navy">Correo electrónico</h3>
+              <h3 class="font-semibold text-brand-navy">{contact.emailLabel}</h3>
               <a href={`mailto:${CONTACT_EMAIL}`} class="mt-1 text-sm text-gray-600 hover:text-brand-red">
                 {CONTACT_EMAIL}
               </a>
@@ -80,14 +89,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               <Icon name="mdi:whatsapp" class="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <h3 class="font-semibold text-brand-navy">WhatsApp Business</h3>
+              <h3 class="font-semibold text-brand-navy">{contact.whatsappLabel}</h3>
               <a
                 href={WHATSAPP_CHAT_URL}
                 data-whatsapp-link
-                data-whatsapp-desktop={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 class="mt-1 text-sm text-gray-600 hover:text-brand-red"
               >
-                +502 4390-5425
+                {WHATSAPP_DISPLAY}
               </a>
             </div>
           </div>
@@ -102,7 +112,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicación de SICSA GROUP — Empresarial El Cortijo II, Interior #118"
+            title={contact.mapTitle}
             class="w-full"
           ></iframe>
         </div>
@@ -112,13 +122,27 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
         class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8"
         data-aos="fade-left"
       >
-        <h3 class="text-xl font-bold text-brand-navy">Envíenos un mensaje</h3>
-        <p class="mt-2 text-sm text-gray-500">Los campos marcados con * son obligatorios.</p>
+        <h3 class="text-xl font-bold text-brand-navy">{contact.formTitle}</h3>
+        <p class="mt-2 text-sm text-gray-500">{contact.requiredHint}</p>
 
-        <form id="contact-form" class="mt-6 space-y-5" novalidate>
+        <form
+          id="contact-form"
+          class="mt-6 space-y-5"
+          novalidate
+          data-locale={locale}
+          data-success-message={contact.successMessage}
+          data-error-message={contact.errorMessage}
+          data-connection-error={contact.connectionError}
+          data-submit-label={contact.submitLabel}
+          data-submitting-label={contact.submittingLabel}
+          data-turnstile-required={isTurnstileEnabled ? 'true' : 'false'}
+          data-turnstile-required-message={contact.turnstileRequired}
+        >
+          <input type="hidden" name="lang" value={locale} />
+
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">
-              Nombre completo <span class="text-brand-red">*</span>
+              {contact.nameLabel} <span class="text-brand-red">*</span>
             </label>
             <input
               type="text"
@@ -128,13 +152,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               maxlength="100"
               autocomplete="name"
               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
-              placeholder="Juan Pérez"
+              placeholder={contact.namePlaceholder}
             />
           </div>
 
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
-              Correo electrónico <span class="text-brand-red">*</span>
+              {contact.emailLabelField} <span class="text-brand-red">*</span>
             </label>
             <input
               type="email"
@@ -144,13 +168,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               maxlength="150"
               autocomplete="email"
               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
-              placeholder="juan@empresa.com"
+              placeholder={contact.emailPlaceholder}
             />
           </div>
 
           <div>
             <label for="address" class="block text-sm font-medium text-gray-700">
-              Dirección <span class="text-brand-red">*</span>
+              {contact.addressLabelField} <span class="text-brand-red">*</span>
             </label>
             <input
               type="text"
@@ -160,13 +184,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               maxlength="200"
               autocomplete="street-address"
               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
-              placeholder="Ciudad de Guatemala"
+              placeholder={contact.addressPlaceholder}
             />
           </div>
 
           <div>
             <label for="phone" class="block text-sm font-medium text-gray-700">
-              Teléfono <span class="text-brand-red">*</span>
+              {contact.phoneLabelField} <span class="text-brand-red">*</span>
             </label>
             <input
               type="tel"
@@ -176,13 +200,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               maxlength="30"
               autocomplete="tel"
               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
-              placeholder="+502 0000-0000"
+              placeholder={contact.phonePlaceholder}
             />
           </div>
 
           <div>
             <label for="message" class="block text-sm font-medium text-gray-700">
-              Comentarios <span class="text-brand-red">*</span>
+              {contact.messageLabel} <span class="text-brand-red">*</span>
             </label>
             <textarea
               id="message"
@@ -191,33 +215,33 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
               required
               maxlength="2000"
               class="mt-1 block w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm shadow-sm outline-none transition focus:border-brand-red focus:ring-2 focus:ring-brand-red/20"
-              placeholder="¿En qué podemos ayudarle?"
+              placeholder={contact.messagePlaceholder}
             ></textarea>
           </div>
 
           {
-            turnstileSiteKey ? (
+            isTurnstileEnabled ? (
               <div
                 class="cf-turnstile"
                 data-sitekey={turnstileSiteKey}
                 data-theme="light"
               />
-            ) : (
+            ) : import.meta.env.DEV ? (
               <p class="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
-                Configure PUBLIC_TURNSTILE_SITE_KEY en .env para activar la verificación anti-bot.
+                {contact.turnstileHint}
               </p>
-            )
+            ) : null
           }
 
           <div id="form-success" class="hidden rounded-lg bg-green-50 p-4 text-sm text-green-700" role="status">
-            Mensaje enviado correctamente. Le responderemos pronto.
+            {contact.successMessage}
           </div>
           <div id="form-error" class="hidden rounded-lg bg-red-50 p-4 text-sm text-red-700" role="alert">
-            Ocurrió un error al enviar. Intente nuevamente.
+            {contact.errorMessage}
           </div>
 
           <Button type="submit" variant="primary" id="submit-btn" class="w-full">
-            Enviar mensaje
+            {contact.submitLabel}
           </Button>
         </form>
       </div>
@@ -226,7 +250,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 </section>
 
 {
-  turnstileSiteKey && (
+  isTurnstileEnabled && (
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   )
 }
@@ -247,18 +271,33 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
   const error = document.getElementById('form-error');
 
   if (form && btn && success && error) {
+    const defaultError = form.dataset.errorMessage ?? '';
+    const connectionError = form.dataset.connectionError ?? '';
+    const submitLabel = form.dataset.submitLabel ?? '';
+    const submittingLabel = form.dataset.submittingLabel ?? '';
+    const turnstileRequired = form.dataset.turnstileRequired === 'true';
+    const turnstileRequiredMessage = form.dataset.turnstileRequiredMessage ?? '';
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      btn.disabled = true;
-      btn.textContent = 'Enviando...';
       success.classList.add('hidden');
       error.classList.add('hidden');
 
+      const turnstileInput = form.querySelector<HTMLInputElement>(
+        'input[name="cf-turnstile-response"]',
+      );
+
+      if (turnstileRequired && !turnstileInput?.value) {
+        error.textContent = turnstileRequiredMessage;
+        error.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = submittingLabel;
+
       try {
         const data = new FormData(form);
-        const turnstileInput = form.querySelector<HTMLInputElement>(
-          'input[name="cf-turnstile-response"]',
-        );
         if (turnstileInput?.value) {
           data.append('cf-turnstile-response', turnstileInput.value);
         }
@@ -268,21 +307,26 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
 
         if (json.success) {
           success.classList.remove('hidden');
+          const langValue = form.querySelector<HTMLInputElement>('input[name="lang"]')?.value ?? 'es';
           form.reset();
+          const langInput = form.querySelector<HTMLInputElement>('input[name="lang"]');
+          if (langInput) {
+            langInput.value = langValue;
+          }
           const widget = form.querySelector('.cf-turnstile');
           if (win.turnstile && widget) {
             win.turnstile.reset(widget);
           }
         } else {
-          error.textContent = json.message ?? 'Ocurrió un error al enviar. Intente nuevamente.';
+          error.textContent = json.message ?? defaultError;
           error.classList.remove('hidden');
         }
       } catch {
-        error.textContent = 'Error de conexión. Verifique su red e intente nuevamente.';
+        error.textContent = connectionError;
         error.classList.remove('hidden');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Enviar mensaje';
+        btn.textContent = submitLabel;
       }
     });
   }

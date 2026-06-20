@@ -29,24 +29,25 @@ export const courierService: CourierService = {
   id: 'courier',
   logoImage: '/images/Logo_SICSA_COURIER_FINAL.png',
   title: 'Courier y P.O. Box',
-  tagline: 'Compre en EE.UU., reciba en Guatemala',
+  tagline: 'Tus compras a un solo clic',
   description:
-    'Compras en Estados Unidos de forma fácil, rápida y segura. Llevamos sus paquetes hasta la puerta de su hogar u oficina.',
+    'SICSA Courier está comprometida en brindar una mejor experiencia a tus compras en línea.',
   extendedDescription:
-    'Con SICSA Courier usted obtiene un casillero (P.O. Box) en Estados Unidos para comprar en sus tiendas favoritas en línea. Nos encargamos de recibir, consolidar y traer sus paquetes a Guatemala con entrega a domicilio, en oficina o recolección en nuestras instalaciones — correspondencia y mercadería en tiempo récord.',
+    'Nuestro servicio garantiza efectividad en tus importaciones desde EE.UU. a Guatemala. Con tu casillero (P.O. Box) en Estados Unidos puedes comprar en tus tiendas favoritas en línea; nos encargamos de recibir, consolidar y traer tus paquetes con entrega a domicilio, en oficina o recolección en nuestras instalaciones — correspondencia y mercadería en tiempo récord.',
   image: '/images/services/courier.jpg',
   imageAlt: 'Operadores de courier cargando y entregando paquetes desde una furgoneta de reparto',
   features: [
-    'Casillero (P.O. Box) en Estados Unidos para compras en línea',
+    'Beneficios para tu casillero personal o empresarial',
+    'Efectividad en tus importaciones desde EE.UU. a Guatemala',
+    'Agente de compras o compras desde tu comodidad, con atención personalizada',
     'Entrega a domicilio u oficina en Guatemala',
     'Recolección en nuestras instalaciones',
-    'Correspondencia y paquetes en tiempo récord',
     'Seguimiento y atención dedicada al servicio Courier',
   ],
   steps: [
-    'Regístrese y obtenga su dirección P.O. Box en EE.UU.',
-    'Compre en sus tiendas en línea favoritas y envíe al casillero',
-    'Reciba sus paquetes en Guatemala con entrega o recolección',
+    'Regístrate y obtén tu dirección P.O. Box en EE.UU.',
+    'Compra en tus tiendas en línea favoritas y envía al casillero',
+    'Recibe tus paquetes en Guatemala con entrega o recolección',
   ],
   socialLinks: {
     facebook: 'https://www.facebook.com/EpBoxGuatemala',

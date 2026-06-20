@@ -1,0 +1,12 @@
+# Redirecciones canónicas (301 permanente)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1. www → sin www (siempre a HTTPS)
+  RewriteCond %{HTTP_HOST} ^www\.sicsagroup\.com\.gt$ [NC]
+  RewriteRule ^(.*)$ https://sicsagroup.com.gt/$1 [L,R=301]
+
+  # 2. HTTP → HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]
+</IfModule>

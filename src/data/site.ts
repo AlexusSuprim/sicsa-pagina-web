@@ -1,46 +1,16 @@
 export const SITE_NAME = 'SICSA GROUP';
-export const SITE_TAGLINE = 'Logística que mueve al mundo';
-export const SITE_DESCRIPTION =
-  'Tu socio estratégico en comercio exterior y soluciones logísticas integrales en Guatemala. Transporte marítimo, aéreo, terrestre y logística aduanal.';
-
-export interface HeroSlide {
-  title: string;
-  subtitle: string;
-  durationMs: number;
-}
-
-export const HERO_SLIDE_DEFAULT_DURATION_MS = 15_000;
-export const HERO_SLIDE_LEMA_DURATION_MS = 14_000;
-
-export const heroSlides: HeroSlide[] = [
-  {
-    title: SITE_TAGLINE,
-    subtitle: SITE_DESCRIPTION,
-    durationMs: HERO_SLIDE_DEFAULT_DURATION_MS,
-  },
-  {
-    title: 'Nuestro Lema',
-    subtitle:
-      'Consolidarnos como la mejor opción del mercado, brindando un servicio logístico confiable, eficiente y cercano, que impulse el crecimiento de nuestros clientes.',
-    durationMs: HERO_SLIDE_LEMA_DURATION_MS,
-  },
-  {
-    title: 'Más de 25 años moviendo al mundo',
-    subtitle:
-      'Tiempo que nos ha convertido en referentes de servicio en la región, expertos en logística aduanera y comercio internacional',
-    durationMs: HERO_SLIDE_DEFAULT_DURATION_MS,
-  },
-];
-
 export const SITE_URL = 'https://sicsagroup.com.gt';
+
+export const OG_IMAGE = '/images/og-default.jpg';
+export const OG_IMAGE_WIDTH = 1920;
+export const OG_IMAGE_HEIGHT = 1080;
 
 export const CONTACT_EMAIL = 'info@sicsagroup.com.gt';
 export const CONTACT_PHONE = '+502 2420-7999';
 export const CONTACT_PHONE_RAW = '+50224207999';
 export const WHATSAPP_PHONE = '50243905425';
-/** Enlace directo al chat — más fiable en dispositivos móviles */
+export const WHATSAPP_DISPLAY = '+502 4390-5425';
 export const WHATSAPP_CHAT_URL = `https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}`;
-/** Atajo wa.me — útil en escritorio */
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_PHONE}`;
 
 export const ADDRESS = {
@@ -51,7 +21,6 @@ export const ADDRESS = {
   full: 'Calzada Atanasio Tzul 22-00, zona 12, Empresarial El Cortijo II, Interior #118, Ciudad de Guatemala',
 };
 
-/** Coordenadas verificadas — Interior #118, Empresarial El Cortijo II */
 export const MAP_LOCATION = {
   latitude: 14.59364221077347,
   longitude: -90.54134524232788,
@@ -59,10 +28,8 @@ export const MAP_LOCATION = {
 
 const MAP_QUERY = `${MAP_LOCATION.latitude},${MAP_LOCATION.longitude}`;
 
-/** Embed con pin único en las coordenadas exactas (sin búsqueda por texto) */
 export const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAP_QUERY}&ll=${MAP_QUERY}&z=18&hl=es&output=embed`;
 
-/** Abrir ubicación exacta en Google Maps */
 export const MAPS_OPEN_URL = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
 
 export const SOCIAL_LINKS = {
@@ -71,17 +38,17 @@ export const SOCIAL_LINKS = {
   linkedin: 'https://www.linkedin.com/company/sicsa-group/',
 } as const;
 
-/** URLs activas para JSON-LD sameAs y componentes de redes sociales */
 export function getActiveSocialUrls(): string[] {
   return Object.values(SOCIAL_LINKS).filter((url) => url.length > 0);
 }
 
-/**
- * Fuentes de imágenes (licencia libre para uso comercial):
- * - Hero: Pexels #262353 (containers/port)
- * - Maritime: Pexels #262353
- * - Air: Unsplash (airplane wing)
- * - Truck: Pexels #4483610
- * - Customs: Unsplash (business documents)
- * - Courier: Pexels #6169668 (recolección y entrega de paquetes)
- */
+export const COURIER_WHATSAPP_PHONE = '50224584174';
+export const COURIER_WHATSAPP_CHAT_URL = `https://api.whatsapp.com/send?phone=${COURIER_WHATSAPP_PHONE}`;
+export const COURIER_WHATSAPP_URL = `https://wa.me/${COURIER_WHATSAPP_PHONE}`;
+export const COURIER_SOCIAL_LINKS = {
+  facebook: 'https://www.facebook.com/EpBoxGuatemala',
+  instagram: 'https://www.instagram.com/sicsacourier/',
+} as const;
+export const COURIER_LOGO_IMAGE = '/images/Logo_SICSA_COURIER_FINAL.png';
+export const COURIER_IMAGE = '/images/services/courier.jpg';
+export const COURIER_WHATSAPP_DISPLAY = '+502 2458-4174';
